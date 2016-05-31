@@ -1,0 +1,84 @@
+Option Explicit
+Private id As Long
+Private cnn As ADODB.Connection
+Private rs As ADODB.Recordset
+Const sDatabasePath As String = "D:\Macros.accdb"
+Const sDatabasePass As String = "somatotropina"
+
+Private Sub Class_Initialize()
+Dim sDocVer As Single
+Dim sTitle As String
+
+Set cnn = New ADODB.Connection
+Set rs = New ADODB.Recordset
+
+sDocVer = ThisWorkbook.BuiltinDocumentProperties("Document Version")
+sTitle = ThisWorkbook.BuiltinDocumentProperties("Title")
+
+Call OpenConnectionAndRecordset
+
+With rs
+    .AddNew
+    .Fields("Who").Value = Application.UserName
+    .Fields("Who2").Value = Environ("Username")
+    .Fields("Start").Value = Now
+    
+    .Fields("RegionalSettings").Value = Application.International(xlCountrySetting)
+    .Fields("Thousands").Value = Application.International(xlThousandsSeparator)
+    .Fields("Decimal").Value = Application.International(xlDecimalSeparator)
+    
+    .Fields("FileTitle").Value = sTitle
+    .Fields("FilePath").Value = ThisWorkbook.FullName
+    .Fields("DocVer").Value = sDocVer
+    .Update
+    id = .Fields("ID").Value
+End With
+
+cnn.Close
+
+End Sub
+
+Private Sub Class_Terminate()
+
+Call OpenConnectionAndRecordset
+
+With rs
+    .Find "ID =" & id
+    .Fields("End").Value = Now
+    .Update
+End With
+
+cnn.Close
+
+End Sub
+
+Property Let ProcedureName(Value As String)
+
+Call OpenConnectionAndRecordset
+
+With rs
+    .Find "ID =" & id
+    .Fields("ProcedureName").Value = Value
+    .Update
+End With
+
+cnn.Close
+
+End Property
+
+Private Sub OpenConnectionAndRecordset()
+
+With cnn
+  .CursorLocation = adUseClient
+  .Provider = "Microsoft.ACE.OLEDB.12.0"
+  .Properties("Data Source") = sDatabasePath
+  .Properties("Persist Security Info") = True
+  .Properties("Jet OLEDB:Database Password") = sDatabasePass
+  .Mode = adModeShareDenyNone
+  .Open
+End With
+
+rs.Open "tbl_ExecutionInfo", cnn, adOpenStatic, adLockOptimistic
+
+End Sub
+
