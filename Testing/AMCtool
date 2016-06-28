@@ -1,0 +1,762 @@
+Sub C_CreateFiles()
+
+Application.ScreenUpdating = False
+On Error GoTo ErrorMsg
+Dim CurSheet As String
+Dim MofifWarning As Boolean
+Dim GuidelineSheet As String
+Dim ProductSheet As String
+Dim ProductName As String
+Dim Product_Col As Long
+Dim MARA_First_Row As Long
+Dim MARA_Last_Row As Long
+Dim MAKT_First_Row As Long
+Dim MAKT_Last_Row As Long
+Dim MVKE_First_Row As Long
+Dim MVKE_Plant_Row As Long
+Dim MVKE_Last_Row As Long
+Dim SATX_First_Row As Long
+Dim SATX_Last_Row As Long
+Dim MTAX_First_Row As Long
+Dim MTAX_Last_Row As Long
+Dim GTS_First_Row As Long
+Dim GTS_Last_Row As Long
+Dim MARC_First_Row As Long
+Dim MARC_Plant_Row As Long
+Dim MARC_StorLoc_Row As Long
+Dim MARC_Last_Row As Long
+Dim MBEW_H_First_Row As Long
+Dim MBEW_H_Plant_Row As Long
+Dim MBEW_H_ValCat_Row As Long
+Dim MBEW_H_Last_Row As Long
+Dim MBEW_C_First_Row As Long
+Dim MBEW_C_Last_Row As Long
+Dim BATCH_First_Row As Long
+Dim BATCH_Plant_Row As Long
+Dim BATCH_StorLoc_Row As Long
+Dim BATCH_Batch_Row As Long
+Dim BATCH_Last_Row As Long
+Dim CLASSIFICATION_First_Row As Long
+Dim CLASSIFICATION_Batch_Row As Long
+Dim CLASSIFICATION_Last_Row As Long
+Dim CLASSIFICATION_Batch_Last_Row As Long
+Dim GLOBAL_First_Row As Long
+Dim GLOBAL_Last_Row As Long
+Dim PIRPP_Last_Row As Long
+Dim PIRPP_First_Row As Long
+Dim PIRVP_First_Row As Long
+Dim PIRVP_Last_Row As Long
+Dim StartCol As Long
+Dim StopCol As Long
+Dim xCell As Range
+Dim LastRow As Long
+Dim r As Long
+Dim vPlant As String
+Dim vVendor As String
+Dim SourceList As Long
+Dim d As Long
+Dim dMaterial As String
+Dim y As Long
+Dim CLASS_Last_Row As Long
+Dim s As Long
+Dim StorLoc As Long
+Dim C As Long
+Dim vMaterial As String
+Dim x As Long
+Dim RemainingMaterials As Long
+Dim P As Single
+Dim Pp As Single
+Dim Pc As Single
+Dim Product As String
+Dim Tablename As String
+Dim t As Long
+Dim TargetRow As String
+Dim vMVKE As Boolean
+Dim i As Long
+             
+Dim TargetSheet As String
+Dim SearchTerm As String
+Dim RowNr As Integer
+Dim Error As Boolean
+Dim ColNr As Integer
+Dim PlantID As String
+Dim FileNameExt As String
+
+CurSheet = ActiveSheet.Name
+MofifWarning = False
+
+Load FrmTableSelection
+FrmTableSelection.Show
+
+If FrmTableSelection.LblAction = "Cancel" Then
+    Unload FrmImportAPO
+    Exit Sub
+End If
+
+If FrmTableSelection.OptGuidelineCreate.Value = True Then
+    GuidelineSheet = "R3 MD guideline"
+    ProductSheet = "Open Requests"
+    ProductName = "MD_InputProduct"
+    Product_Col = 10
+    FileNameExt = ""
+Else
+    If FrmTableSelection.OptGuidelineExtend.Value = True Then
+        GuidelineSheet = "R3 MD guideline (Extend)"
+        ProductSheet = "Extend Plant"
+        ProductName = "EXT_InputProduct"
+        Product_Col = 1
+        FileNameExt = ""
+    Else
+        GuidelineSheet = "R3 MD guideline (Modification)"
+        ProductSheet = "Open Requests"
+        ProductName = "MOD_InputMaterial"
+        Product_Col = 11
+        FileNameExt = "_MM2"
+    End If
+End If
+
+If FrmTableSelection.CkbExport.Value = True Then
+    Application.Calculation = xlManual
+    GoTo Make_CSV
+End If
+
+Sheets(GuidelineSheet).Select
+Columns("A:F").EntireColumn.Hidden = False
+
+Error = False
+
+'Constants
+    'Rows
+        'MARA
+          If FrmTableSelection.CkbMARA.Value = True Then
+            FindTargetRow "MARA_First_Row", RowNr, Error
+            MARA_First_Row = RowNr
+            FindTargetRow "MARA_Last_Row", RowNr, Error
+            MARA_Last_Row = RowNr
+            If Error = True Then Exit Sub
+          End If
+        'MAKT
+          If FrmTableSelection.CkbMAKT.Value = True Then
+            FindTargetRow "MAKT_First_Row", RowNr, Error
+            MAKT_First_Row = RowNr
+            FindTargetRow "MAKT_Last_Row", RowNr, Error
+            MAKT_Last_Row = RowNr
+          End If
+        'MVKE
+          If FrmTableSelection.CkbMVKE.Value = True Then
+            FindTargetRow "MVKE_First_Row", RowNr, Error
+            MVKE_First_Row = RowNr
+            FindTargetRow "MVKE_Plant_Row", RowNr, Error
+            MVKE_Plant_Row = RowNr
+            FindTargetRow "MVKE_Last_Row", RowNr, Error
+            MVKE_Last_Row = RowNr
+          End If
+        'SATX
+          If FrmTableSelection.CkbSATX.Value = True Then
+            FindTargetRow "SATX_First_Row", RowNr, Error
+            SATX_First_Row = RowNr
+            FindTargetRow "SATX_Last_Row", RowNr, Error
+            SATX_Last_Row = RowNr
+          End If
+            
+        'MTAX
+          If FrmTableSelection.CkbMTAX.Value = True Then
+            FindTargetRow "MTAX_First_Row", RowNr, Error
+            MTAX_First_Row = RowNr
+            FindTargetRow "MTAX_Last_Row", RowNr, Error
+            MTAX_Last_Row = RowNr
+          End If
+        'GTS
+          If FrmTableSelection.CkbGTS.Value = True Then
+            FindTargetRow "GTS_First_Row", RowNr, Error
+            GTS_First_Row = RowNr
+            FindTargetRow "GTS_Last_Row", RowNr, Error
+            GTS_Last_Row = RowNr
+          End If
+        'MARC
+          If FrmTableSelection.CkbMARC.Value = True Then
+            FindTargetRow "MARC_First_Row", RowNr, Error
+            MARC_First_Row = RowNr
+            FindTargetRow "MARC_Plant_Row", RowNr, Error
+            MARC_Plant_Row = RowNr
+            FindTargetRow "MARC_StorLoc_Row", RowNr, Error
+            MARC_StorLoc_Row = RowNr
+            FindTargetRow "MARC_Last_Row", RowNr, Error
+            MARC_Last_Row = RowNr
+          End If
+        'MBEW
+          If FrmTableSelection.CkbMBEW.Value = True Then
+            FindTargetRow "MBEW_H_First_Row", RowNr, Error
+            MBEW_H_First_Row = RowNr
+            FindTargetRow "MBEW_H_Plant_Row", RowNr, Error
+            MBEW_H_Plant_Row = RowNr
+            FindTargetRow "MBEW_H_ValCat_Row", RowNr, Error
+            MBEW_H_ValCat_Row = RowNr
+            FindTargetRow "MBEW_H_Last_Row", RowNr, Error
+            MBEW_H_Last_Row = RowNr
+            FindTargetRow "MBEW_C_First_Row", RowNr, Error
+            MBEW_C_First_Row = RowNr
+            FindTargetRow "MBEW_C_Last_Row", RowNr, Error
+            MBEW_C_Last_Row = RowNr
+          End If
+        'BATCH
+          If FrmTableSelection.CkbBATCH.Value = True Then
+            FindTargetRow "BATCH_First_Row", RowNr, Error
+            BATCH_First_Row = RowNr
+            FindTargetRow "BATCH_Plant_Row", RowNr, Error
+            BATCH_Plant_Row = RowNr
+            FindTargetRow "BATCH_StorLoc_Row", RowNr, Error
+            BATCH_StorLoc_Row = RowNr
+            FindTargetRow "BATCH_Batch_Row", RowNr, Error
+            BATCH_Batch_Row = RowNr
+            FindTargetRow "BATCH_Last_Row", RowNr, Error
+            BATCH_Last_Row = RowNr
+          End If
+        'CLASSIFICATION
+          If FrmTableSelection.CkbCLASSIF.Value = True Then
+            FindTargetRow "CLASSIFICATION_First_Row", RowNr, Error
+            CLASSIFICATION_First_Row = RowNr
+            FindTargetRow "CLASSIFICATION_Batch_Row", RowNr, Error
+            CLASSIFICATION_Batch_Row = RowNr
+            FindTargetRow "CLASSIFICATION_Last_Row", RowNr, Error
+            CLASSIFICATION_Last_Row = RowNr
+            FindTargetRow "CLASSIFICATION_Batch_Last_Row", RowNr, Error
+            CLASSIFICATION_Batch_Last_Row = RowNr
+          End If
+
+        'GLOBAL
+          If FrmTableSelection.CkbGlobal.Value = True Then
+            FindTargetRow "GLOBAL_First_Row", RowNr, Error
+            GLOBAL_First_Row = RowNr
+            FindTargetRow "GLOBAL_Last_Row", RowNr, Error
+            GLOBAL_Last_Row = RowNr
+          End If
+        'PIR
+          If FrmTableSelection.CkbPIR.Value = True Then
+            FindTargetRow "PIRPP_First_Row", RowNr, Error
+            PIRPP_First_Row = RowNr
+            FindTargetRow "PIRPP_Last_Row", RowNr, Error
+            PIRPP_Last_Row = RowNr
+            FindTargetRow "PIRVP_First_Row", RowNr, Error
+            PIRVP_First_Row = RowNr
+            FindTargetRow "PIRVP_Last_Row", RowNr, Error
+            PIRVP_Last_Row = RowNr
+          End If
+              
+        
+    'Columns
+    Const MARA_Col As Long = 12
+    Const MAKT_Col As Long = 12
+    Const MVKE_Col As Long = 12
+    Const SATX_Col As Long = 12
+    Const MARC_Col As Long = 12
+    Const GTS_Col As Long = 12
+    Const MTAX_First_Col As Long = 12
+    Const MTAX_Last_Col As Long = 28
+    Const MBEW_Col As Long = 12
+    Const BATCH_Col As Long = 12
+    Const CLASSIFICATION_First_Col As Long = 12
+    Const CLASSIFICATION_Last_Col As Long = 17
+    Const GLOBAL_Col As Long = 12
+    Const PIR_Required_Col As Long = 12
+    Const PIR_First_Col As Long = 13
+    Const PIR_Last_Col As Long = 26
+    Const PIR_Vendor_Col As Long = 13
+    Const PIR_Material_Col As Long = 14
+    Const PIR_Plant_Col As Long = 16
+    Const PIR_SourceList_Col As Long = 28
+        
+Application.Calculation = xlManual
+
+'Clear Sheets
+    ClearSheet "MARA"
+    ClearSheet "MAKT"
+    ClearSheet "MVKE"
+    ClearSheet "MTAX"
+    ClearSheet "SATX"
+    ClearSheet "GTS"
+    ClearSheet "MARC"
+    ClearSheet "MBEW"
+    ClearSheet "BATCH"
+    ClearSheet "CLASSIFICATION"
+    ClearSheet "GLOBAL"
+    ClearSheet "PIR"
+    ClearSheet "ME05"
+    ClearSheet "A-POS"
+    
+'Next_Product:
+    
+    x = 2
+    Sheets(ProductSheet).Visible = True
+    Sheets(ProductSheet).Select
+    RemainingMaterials = Cells(x, Product_Col).CurrentRegion.Rows.Count - 1
+    P = 100 / RemainingMaterials
+    Pp = P / 9
+    Pc = 0
+    
+    Do While Cells(x, Product_Col).Value2 <> ""
+        Product = Cells(x, Product_Col)
+        Sheets(GuidelineSheet).Range(ProductName) = Product
+        Sheets(GuidelineSheet).Select
+        ActiveSheet.Calculate
+    
+    'MARA
+      If FrmTableSelection.CkbMARA.Value = True Then
+        Tablename = "MARA"
+        Pc = Pc + Pp
+        Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
+        Sheets(GuidelineSheet).Select
+        t = MARA_Col
+        Do While Cells(MARA_First_Row, t) <> ""
+            If Cells(MARA_First_Row, t) <> "-" Then
+                Range(Cells(MARA_First_Row, t), Cells(MARA_Last_Row, t)).Copy
+                Sheets("MARA").Select
+                TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+                Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                :=False, Transpose:=True
+                Sheets(GuidelineSheet).Select
+            End If
+            t = t + 1
+        Loop
+        
+        If GuidelineSheet = "R3 MD guideline (Modification)" Then
+            If Range("MOD_Matgrp") <> "/" Or Range("MOD_PH") <> "/" Or Range("MOD_CoO") <> "/" Then
+                MofifWarning = True
+            End If
+        End If
+        
+      End If
+    
+    'MAKT
+      If FrmTableSelection.CkbMAKT.Value = True Then
+        Tablename = "MAKT"
+        Sheets(GuidelineSheet).Select
+        t = MAKT_Col
+        Do While Cells(MAKT_First_Row, t) <> ""
+            If Cells(MAKT_First_Row, t) <> "-" Then
+                Range(Cells(MAKT_First_Row, t), Cells(MAKT_Last_Row, t)).Copy
+                Sheets("MAKT").Select
+                TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+                Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                :=False, Transpose:=True
+                Sheets(GuidelineSheet).Select
+            End If
+            t = t + 1
+        Loop
+      End If
+    
+    'MVKE
+      vMVKE = False
+      If FrmTableSelection.CkbMVKE.Value = True Then
+        Tablename = "MVKE"
+        Pc = Pc + Pp
+        Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
+        Sheets(GuidelineSheet).Select
+        i = MVKE_Col
+        Do While Cells(MVKE_First_Row, i) <> ""
+            If Cells(MVKE_Plant_Row, i) <> "-" Then
+                vMVKE = True
+                'Copy MVKE
+                    Range(Cells(MVKE_First_Row, i), Cells(MVKE_Last_Row, i)).Copy
+                    Sheets("MVKE").Select
+                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks:=False, Transpose:=True
+            End If
+            i = i + 1
+            Sheets(GuidelineSheet).Select
+        Loop
+      End If
+    
+    'MTAX
+      If FrmTableSelection.CkbMTAX.Value = True And vMVKE = True Then
+        Tablename = "MTAX"
+        Pc = Pc + Pp
+        Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
+        Sheets(GuidelineSheet).Select
+        
+        If FrmTableSelection.OptGuidelineExtend.Value = True Then
+            Sheets(GuidelineSheet).Select
+            Range(Cells(MTAX_First_Row, MTAX_First_Col), Cells(MTAX_Last_Row, MTAX_Last_Col)).Copy
+            Sheets("MTAX").Select
+            TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+            Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                :=False, Transpose:=True
+        Else
+            t = MARA_Col
+            Do While Cells(MARA_First_Row, t) <> ""
+                
+                If Cells(MARA_First_Row, t) <> "-" Then
+                    vMaterial = Cells(MARA_First_Row, t)
+                    Range(Cells(MTAX_First_Row, MTAX_First_Col), Cells(MTAX_First_Row, MTAX_Last_Col)) = vMaterial
+                    Range(Cells(MTAX_First_Row, MTAX_First_Col), Cells(MTAX_Last_Row, MTAX_Last_Col)).Copy
+                    Sheets("MTAX").Select
+                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks:=False, Transpose:=True
+                End If
+                t = t + 1
+                Sheets(GuidelineSheet).Select
+            Loop
+        End If
+      End If
+      
+    'SATX
+      If FrmTableSelection.CkbSATX.Value = True Then
+        Tablename = "SATX"
+        Pc = Pc + Pp
+        Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
+        Sheets(GuidelineSheet).Select
+        If Cells(SATX_Last_Row, SATX_Col) <> "" Then
+            Range(Cells(SATX_First_Row, SATX_Col), Cells(SATX_Last_Row, SATX_Col)).Copy
+            Sheets("SATX").Select
+            TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+            Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                :=False, Transpose:=True
+        End If
+      End If
+      
+    'GTS
+      If FrmTableSelection.CkbGTS.Value = True Then
+        Tablename = "GTS"
+        Sheets(GuidelineSheet).Select
+        If Cells(GTS_Last_Row - 1, GTS_Col) <> "-" Then
+            Range(Cells(GTS_First_Row, GTS_Col), Cells(GTS_Last_Row, GTS_Col)).Copy
+            Sheets("GTS").Select
+            TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+            Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                :=False, Transpose:=True
+        End If
+      End If
+      
+    'MARC
+      If FrmTableSelection.CkbMARC.Value = True Then
+        'Add new logic for multiple stor. Loc.
+        Tablename = "MARC"
+        Pc = Pc + Pp
+        Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
+        
+        C = MARC_Col
+        Sheets(GuidelineSheet).Select
+        Do While Cells(MARC_Plant_Row, C) <> ""
+            Sheets(GuidelineSheet).Select
+            If Cells(MARC_Plant_Row, C) <> "-" Then
+                PlantID = Cells(MARC_Plant_Row, C)
+                
+                'Stor.Loc loop
+                FindTargetColumn "M-StorLoc", PlantID, ColNr, Error
+                
+                s = 2
+                Do While Cells(s, ColNr) <> ""
+                    Sheets("M-StorLoc").Select
+                    StorLoc = Cells(s, ColNr)
+                    Sheets(GuidelineSheet).Select
+                    Cells(MARC_StorLoc_Row, C) = StorLoc
+                    
+                    Range(Cells(MARC_First_Row, C), Cells(MARC_Last_Row, C)).Copy
+                    Sheets("MARC").Select
+                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=True
+                
+                    s = s + 1
+                    Sheets("M-StorLoc").Select
+                Loop
+                
+                'New since 8500 implementation
+                If s = 2 Then
+                    Sheets(GuidelineSheet).Select
+                    Range(Cells(MARC_First_Row, C), Cells(MARC_Last_Row, C)).Copy
+                    Sheets("MARC").Select
+                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=True
+                End If
+                
+                'Stor.Loc reset
+                Sheets("M-StorLoc").Select
+                StorLoc = Cells(2, ColNr)
+                Sheets(GuidelineSheet).Select
+                Cells(MARC_StorLoc_Row, C) = StorLoc
+            End If
+            Sheets(GuidelineSheet).Select
+            C = C + 1
+        Loop
+      End If
+      
+    'MBEW
+      If FrmTableSelection.CkbMBEW.Value = True Then
+        Tablename = "MBEW"
+        Pc = Pc + Pp
+        Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
+        C = MBEW_Col
+        Sheets(GuidelineSheet).Select
+        Do While Cells(MBEW_H_Plant_Row, C) <> ""
+            Sheets(GuidelineSheet).Select
+            If Cells(MBEW_H_Plant_Row, C) <> "-" Then
+              'Header
+                Range(Cells(MBEW_H_First_Row, C), Cells(MBEW_H_Last_Row, C)).Copy
+                Sheets("MBEW").Select
+                TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+                Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                :=False, Transpose:=True
+              'Child: if not 'Z' this part must be skipped
+                Sheets(GuidelineSheet).Select
+                If Cells(MBEW_H_ValCat_Row, C) = "Z" Then
+                    Sheets(GuidelineSheet).Select
+                    Range(Cells(MBEW_C_First_Row, C), Cells(MBEW_C_Last_Row, C)).Copy
+                    Sheets("MBEW").Select
+                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=True
+                End If
+            End If
+            Sheets(GuidelineSheet).Select
+            C = C + 1
+        Loop
+      End If
+      
+    'BATCH
+      If FrmTableSelection.CkbBATCH.Value = True Then
+        'Add new logic for multiple stor. Loc.
+        Tablename = "BATCH"
+        Pc = Pc + Pp
+        Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
+        C = BATCH_Col
+        Sheets(GuidelineSheet).Select
+        
+        'Check if batch managed
+        If Cells(BATCH_Batch_Row, C) <> "-" Then
+        Do While Cells(BATCH_Plant_Row, C) <> ""
+            Sheets(GuidelineSheet).Select
+            If Cells(BATCH_Batch_Row, C) <> "-" Then
+                If Cells(BATCH_Plant_Row, C) <> "-" Then
+                PlantID = Cells(BATCH_Plant_Row, C)
+                
+                'Stor.Loc loop
+                FindTargetColumn "M-StorLoc", PlantID, ColNr, Error
+                s = 2
+                Do While Cells(s, ColNr) <> ""
+                    Sheets("M-StorLoc").Select
+                    StorLoc = Cells(s, ColNr)
+                    Sheets(GuidelineSheet).Select
+                    Cells(BATCH_StorLoc_Row, C) = StorLoc
+                
+                    Range(Cells(BATCH_First_Row, C), Cells(BATCH_Last_Row, C)).Copy
+                    Sheets("BATCH").Select
+                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=True
+                    
+                    s = s + 1
+                    Sheets("M-StorLoc").Select
+                Loop
+                
+                If s = 2 Then
+                    Sheets(GuidelineSheet).Select
+                    Range(Cells(BATCH_First_Row, C), Cells(BATCH_Last_Row, C)).Copy
+                    Sheets("BATCH").Select
+                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=True
+                End If
+                
+                'Stor.Loc reset
+                Sheets("M-StorLoc").Select
+                StorLoc = Cells(2, ColNr)
+                Sheets(GuidelineSheet).Select
+                Cells(BATCH_StorLoc_Row, C) = StorLoc
+                    
+                End If
+            End If
+            Sheets(GuidelineSheet).Select
+            C = C + 1
+        Loop
+        End If
+      End If
+      
+'CLASSIFICATION
+      If FrmTableSelection.CkbCLASSIF.Value = True Then
+        Tablename = "CLASSIFICATION"
+        Pc = Pc + Pp
+        Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
+        Sheets(GuidelineSheet).Select
+        
+        For y = 0 To 1
+            If Cells(CLASSIFICATION_Batch_Row, 13) <> "-" Then
+                CLASS_Last_Row = CLASSIFICATION_Batch_Last_Row
+            Else
+                CLASS_Last_Row = CLASSIFICATION_Last_Row
+            End If
+            
+            If y = 0 Then
+                Range(Cells(CLASSIFICATION_First_Row, CLASSIFICATION_First_Col), Cells(CLASS_Last_Row, CLASSIFICATION_Last_Col)).Copy
+            Else
+                'Regsiter A-POScode
+                
+                dMaterial = Cells(CLASSIFICATION_First_Row, CLASSIFICATION_First_Col + 7)
+                If dMaterial <> "-" Then
+                    Sheets("A-POS").Select
+                    
+                    
+                    d = Cells(1, 1).CurrentRegion.Rows.Count
+                    Cells(d + 1, 1) = dMaterial
+                    
+                    Sheets(GuidelineSheet).Select
+                    Range(Cells(CLASSIFICATION_First_Row, CLASSIFICATION_First_Col + 7), Cells(CLASS_Last_Row, CLASSIFICATION_Last_Col + 7)).Copy
+                Else
+                    GoTo Next_y
+                End If
+                
+            End If
+            
+            Sheets("CLASSIFICATION").Select
+            TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+            Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                :=False, Transpose:=False
+            Sheets(GuidelineSheet).Select
+Next_y:
+        Next y
+      End If
+      
+    'GLOBAL
+    If FrmTableSelection.CkbGlobal.Value = True Then
+        Tablename = "GLOBAL"
+        Sheets(GuidelineSheet).Select
+        If Cells(GLOBAL_First_Row, GLOBAL_Col) <> "-" Then
+            Range(Cells(GLOBAL_First_Row, GLOBAL_Col), Cells(GLOBAL_Last_Row, GLOBAL_Col)).Copy
+            Sheets("Global").Select
+            TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+            Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                :=False, Transpose:=True
+        End If
+      End If
+      
+      
+    'PIR
+      If FrmTableSelection.CkbPIR.Value = True Then
+       Tablename = "PIR"
+       Pc = Pc + Pp
+       Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
+       Sheets(GuidelineSheet).Select
+       i = PIRPP_First_Row
+       Do While Cells(i, PIR_Required_Col) <> ""
+       
+            If Cells(i, PIR_Required_Col) = "Yes" Then
+                SourceList = Cells(i, PIR_SourceList_Col)
+                Range(Cells(i, PIR_First_Col), Cells(i, PIR_Last_Col)).Copy
+                Sheets("PIR").Select
+                TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+                Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+                'check for SourceList requirement
+              If FrmTableSelection.CkbME05.Value = True Then
+                If SourceList = "X" Then
+                    Sheets(GuidelineSheet).Select
+                    
+                    vMaterial = "'" & Cells(i, PIR_Material_Col)
+                    vPlant = Cells(i, PIR_Plant_Col)
+                    vVendor = Cells(i, PIR_Vendor_Col)
+                    Sheets("ME05").Select
+                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
+                    Cells(TargetRow, 1) = vMaterial
+                    Cells(TargetRow, 2) = vPlant
+                    Cells(TargetRow, 3) = vVendor
+                End If
+              End If
+            End If
+            i = i + 1
+            Sheets(GuidelineSheet).Select
+       Loop
+     End If
+     
+    'Next product
+        x = x + 1
+        Sheets(ProductSheet).Select
+        RemainingMaterials = RemainingMaterials - 1
+    Loop
+
+   'Delete blanco records in classification sheet
+    If FrmTableSelection.CkbCLASSIF.Value = True Then
+     Application.StatusBar = "Deleting blanco records in Classification sheet."
+     Sheets("CLASSIFICATION").Select
+    
+     r = 2
+     Do While Cells(r, 1) <> ""
+        If Cells(r, 6) = "-" Then
+            Cells(r, 6).EntireRow.Delete
+        Else
+            r = r + 1
+        End If
+     Loop
+    End If
+    
+   'Convert weights in GLOBAl to number
+    Sheets("Global").Select
+    If Cells(2, 1) <> "" Then
+        LastRow = Cells(1, 1).CurrentRegion.Rows.Count
+        
+        FindTargetColumn "Global", "Packing Weight(kg)", ColNr, Error
+        StartCol = ColNr
+        FindTargetColumn "Global", "Product Weight(kg)", ColNr, Error
+        StopCol = ColNr
+        Range(Cells(2, StartCol), Cells(LastRow, StopCol)).Select
+        For Each xCell In Selection
+            xCell.Value = CDec(xCell.Value)
+        Next xCell
+    End If
+    
+    'Reset Formula in Guideline MTAX - Material
+    If FrmTableSelection.OptGuidelineCreate.Value = True Then
+        Sheets(GuidelineSheet).Select
+        Range(Cells(MTAX_First_Row, MTAX_First_Col), Cells(MTAX_First_Row, MTAX_Last_Col)).FormulaR1C1 = "=MD_Material"
+    End If
+
+Application.StatusBar = ""
+Sheets(GuidelineSheet).Columns("A:E").EntireColumn.Hidden = True
+
+Make_CSV:
+
+If FrmTableSelection.CkbSheet.Value = False Then
+
+    'Special QA2 format
+      'If FrmTableSelection.CkbQA2.Value = False Then
+      '  'DeleteMTAX for DAPT
+      '   Application.StatusBar = "Deleting blanco records in Classification sheet."
+      '   Sheets("MTAX").Select
+      '   r = 2
+      '   Do While Cells(r, 1) <> ""
+      '      If Cells(r, 2) = "PT" Then
+      '          Cells(r, 2).EntireRow.DELETE
+      '      Else
+      '          r = r + 1
+      '      End If
+      '   Loop
+      '  End If
+      '
+      
+    
+    MakeCSV FileNameExt
+End If
+
+Sheets(CurSheet).Select
+
+If MofifWarning = True Then
+    MsgBox "Please evaluate manually if there are changes on:" & Chr(10) & Chr(10) & "     - Product Hierarchy" & Chr(10) & "     - Country of Origin" & Chr(10) & Chr(10) & "For these fields, the system detected values in the request." & Chr(10) & Chr(10) & "IMPORTANT: Never change PH1+PH2. Inform SCO (+ Thomas Morre) in case of a change request on PH", vbCritical, "Manual evaluation"
+End If
+
+MakeWizard
+
+Exit_Sub:
+Application.Calculation = xlAutomatic
+Application.Calculate
+Application.StatusBar = False
+Application.ScreenUpdating = True
+Application.CutCopyMode = False
+Unload FrmTableSelection
+
+Exit Sub
+
+ErrorMsg:
+MsgBox "Error(s) dedected in " & Tablename & " sheet." & Chr(10) & Chr(10) & "Solve all errors before executing the 'D_CreateFiles' macro." & Chr(10) & "Use macro 'C_ErrorLog' to check the remaining issues.", vbCritical, "Error"
+GoTo Exit_Sub
+
+End Sub
