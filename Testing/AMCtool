@@ -1,7 +1,8 @@
+Option Explicit
 Sub C_CreateFiles()
-
+Dim tm As New Class1
 Application.ScreenUpdating = False
-On Error GoTo ErrorMsg
+'On Error GoTo ErrorMsg
 Dim CurSheet As String
 Dim MofifWarning As Boolean
 Dim GuidelineSheet As String
@@ -284,45 +285,58 @@ Application.Calculation = xlManual
     ClearSheet "ME05"
     ClearSheet "A-POS"
     
+    Dim wksGuideLine As Worksheet
+    Dim wksProduct As Worksheet
+    
+    Set wksGuideLine = Sheets(GuidelineSheet)
+    Set wksProduct = Sheets(ProductSheet)
 'Next_Product:
     
     x = 2
-    Sheets(ProductSheet).Visible = True
-    Sheets(ProductSheet).Select
-    RemainingMaterials = Cells(x, Product_Col).CurrentRegion.Rows.Count - 1
+    wksProduct.Visible = True
+    'Sheets(ProductSheet).Select
+    RemainingMaterials = wksProduct.Cells(x, Product_Col).CurrentRegion.Rows.Count - 1
     P = 100 / RemainingMaterials
     Pp = P / 9
     Pc = 0
     
-    Do While Cells(x, Product_Col).Value2 <> ""
-        Product = Cells(x, Product_Col)
-        Sheets(GuidelineSheet).Range(ProductName) = Product
-        Sheets(GuidelineSheet).Select
-        ActiveSheet.Calculate
+    Do While wksProduct.Cells(x, Product_Col).Value2 <> ""
+        Product = wksProduct.Cells(x, Product_Col).Value2
+        wksGuideLine.Range(ProductName) = Product
+        'Sheets(GuidelineSheet).Select
+        wksGuideLine.Calculate
     
     'MARA
       If FrmTableSelection.CkbMARA.Value = True Then
         Tablename = "MARA"
         Pc = Pc + Pp
         Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
-        Sheets(GuidelineSheet).Select
+        'Sheets(GuidelineSheet).Select
         t = MARA_Col
-        Do While Cells(MARA_First_Row, t) <> ""
-            If Cells(MARA_First_Row, t) <> "-" Then
-                Range(Cells(MARA_First_Row, t), Cells(MARA_Last_Row, t)).Copy
-                Sheets("MARA").Select
-                TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-                Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                :=False, Transpose:=True
-                Sheets(GuidelineSheet).Select
+        Do While wksGuideLine.Cells(MARA_First_Row, t).Value2 <> ""
+            If wksGuideLine.Cells(MARA_First_Row, t).Value2 <> "-" Then
+                With wksGuideLine
+                    .Range(.Cells(MARA_First_Row, t), .Cells(MARA_Last_Row, t)).Copy
+                End With
+                
+                'Sheets("MARA").Select
+                With Sheets("MARA")
+                    TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                    .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=True
+                End With
+                
+                'Sheets(GuidelineSheet).Select
             End If
             t = t + 1
         Loop
         
         If GuidelineSheet = "R3 MD guideline (Modification)" Then
-            If Range("MOD_Matgrp") <> "/" Or Range("MOD_PH") <> "/" Or Range("MOD_CoO") <> "/" Then
-                MofifWarning = True
-            End If
+            With wksGuideLine
+                If .Range("MOD_Matgrp").Value2 <> "/" Or .Range("MOD_PH").Value2 <> "/" Or .Range("MOD_CoO").Value2 <> "/" Then
+                    MofifWarning = True
+                End If
+            End With
         End If
         
       End If
@@ -330,16 +344,21 @@ Application.Calculation = xlManual
     'MAKT
       If FrmTableSelection.CkbMAKT.Value = True Then
         Tablename = "MAKT"
-        Sheets(GuidelineSheet).Select
+        'Sheets(GuidelineSheet).Select
         t = MAKT_Col
-        Do While Cells(MAKT_First_Row, t) <> ""
-            If Cells(MAKT_First_Row, t) <> "-" Then
-                Range(Cells(MAKT_First_Row, t), Cells(MAKT_Last_Row, t)).Copy
-                Sheets("MAKT").Select
-                TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-                Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                :=False, Transpose:=True
-                Sheets(GuidelineSheet).Select
+        Do While wksGuideLine.Cells(MAKT_First_Row, t).Value2 <> ""
+            If wksGuideLine.Cells(MAKT_First_Row, t).Value2 <> "-" Then
+                With wksGuideLine
+                    .Range(.Cells(MAKT_First_Row, t), .Cells(MAKT_Last_Row, t)).Copy
+                End With
+                
+                'Sheets("MAKT").Select
+                With Sheets("MAKT")
+                    TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                    .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=True
+                End With
+                'Sheets(GuidelineSheet).Select
             End If
             t = t + 1
         Loop
@@ -351,19 +370,23 @@ Application.Calculation = xlManual
         Tablename = "MVKE"
         Pc = Pc + Pp
         Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
-        Sheets(GuidelineSheet).Select
+        'Sheets(GuidelineSheet).Select
         i = MVKE_Col
-        Do While Cells(MVKE_First_Row, i) <> ""
-            If Cells(MVKE_Plant_Row, i) <> "-" Then
+        Do While wksGuideLine.Cells(MVKE_First_Row, i).Value2 <> ""
+            If wksGuideLine.Cells(MVKE_Plant_Row, i).Value2 <> "-" Then
                 vMVKE = True
                 'Copy MVKE
-                    Range(Cells(MVKE_First_Row, i), Cells(MVKE_Last_Row, i)).Copy
-                    Sheets("MVKE").Select
-                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks:=False, Transpose:=True
+                    With wksGuideLine
+                        .Range(.Cells(MVKE_First_Row, i), .Cells(MVKE_Last_Row, i)).Copy
+                    End With
+                    'Sheets("MVKE").Select
+                    With Sheets("MVKE")
+                        TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                        .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks:=False, Transpose:=True
+                    End With
             End If
             i = i + 1
-            Sheets(GuidelineSheet).Select
+            'Sheets(GuidelineSheet).Select
         Loop
       End If
     
@@ -372,29 +395,37 @@ Application.Calculation = xlManual
         Tablename = "MTAX"
         Pc = Pc + Pp
         Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
-        Sheets(GuidelineSheet).Select
+        'Sheets(GuidelineSheet).Select
         
         If FrmTableSelection.OptGuidelineExtend.Value = True Then
-            Sheets(GuidelineSheet).Select
-            Range(Cells(MTAX_First_Row, MTAX_First_Col), Cells(MTAX_Last_Row, MTAX_Last_Col)).Copy
-            Sheets("MTAX").Select
-            TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-            Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                :=False, Transpose:=True
+            'Sheets(GuidelineSheet).Select
+            With wksGuideLine
+            .Range(.Cells(MTAX_First_Row, MTAX_First_Col), .Cells(MTAX_Last_Row, MTAX_Last_Col)).Copy
+            End With
+            'Sheets("MTAX").Select
+            With Sheets("MTAX")
+                TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=True
+            End With
         Else
             t = MARA_Col
-            Do While Cells(MARA_First_Row, t) <> ""
+            Do While wksGuideLine.Cells(MARA_First_Row, t).Value2 <> ""
                 
-                If Cells(MARA_First_Row, t) <> "-" Then
-                    vMaterial = Cells(MARA_First_Row, t)
-                    Range(Cells(MTAX_First_Row, MTAX_First_Col), Cells(MTAX_First_Row, MTAX_Last_Col)) = vMaterial
-                    Range(Cells(MTAX_First_Row, MTAX_First_Col), Cells(MTAX_Last_Row, MTAX_Last_Col)).Copy
-                    Sheets("MTAX").Select
-                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks:=False, Transpose:=True
+                If wksGuideLine.Cells(MARA_First_Row, t).Value2 <> "-" Then
+                    With wksGuideLine
+                        vMaterial = .Cells(MARA_First_Row, t).Value2
+                        .Range(.Cells(MTAX_First_Row, MTAX_First_Col), .Cells(MTAX_First_Row, MTAX_Last_Col)) = vMaterial
+                        .Range(.Cells(MTAX_First_Row, MTAX_First_Col), .Cells(MTAX_Last_Row, MTAX_Last_Col)).Copy
+                    End With
+                    'Sheets("MTAX").Select
+                    With Sheets("MTAX")
+                        TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                        .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks:=False, Transpose:=True
+                    End With
                 End If
                 t = t + 1
-                Sheets(GuidelineSheet).Select
+                'Sheets(GuidelineSheet).Select
             Loop
         End If
       End If
@@ -404,26 +435,34 @@ Application.Calculation = xlManual
         Tablename = "SATX"
         Pc = Pc + Pp
         Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
-        Sheets(GuidelineSheet).Select
-        If Cells(SATX_Last_Row, SATX_Col) <> "" Then
-            Range(Cells(SATX_First_Row, SATX_Col), Cells(SATX_Last_Row, SATX_Col)).Copy
-            Sheets("SATX").Select
-            TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-            Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                :=False, Transpose:=True
+        'Sheets(GuidelineSheet).Select
+        If wksGuideLine.Cells(SATX_Last_Row, SATX_Col).Value2 <> "" Then
+            With wksGuideLine
+                .Range(.Cells(SATX_First_Row, SATX_Col), .Cells(SATX_Last_Row, SATX_Col)).Copy
+            End With
+            'Sheets("SATX").Select
+            With Sheets("SATX")
+                TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=True
+            End With
         End If
       End If
       
     'GTS
       If FrmTableSelection.CkbGTS.Value = True Then
         Tablename = "GTS"
-        Sheets(GuidelineSheet).Select
-        If Cells(GTS_Last_Row - 1, GTS_Col) <> "-" Then
-            Range(Cells(GTS_First_Row, GTS_Col), Cells(GTS_Last_Row, GTS_Col)).Copy
-            Sheets("GTS").Select
-            TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-            Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                :=False, Transpose:=True
+        'Sheets(GuidelineSheet).Select
+        If wksGuideLine.Cells(GTS_Last_Row - 1, GTS_Col).Value2 <> "-" Then
+            With wksGuideLine
+                .Range(.Cells(GTS_First_Row, GTS_Col), .Cells(GTS_Last_Row, GTS_Col)).Copy
+            End With
+            'Sheets("GTS").Select
+            With Sheets("GTS")
+                TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=True
+            End With
         End If
       End If
       
@@ -435,49 +474,57 @@ Application.Calculation = xlManual
         Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
         
         C = MARC_Col
-        Sheets(GuidelineSheet).Select
-        Do While Cells(MARC_Plant_Row, C) <> ""
-            Sheets(GuidelineSheet).Select
-            If Cells(MARC_Plant_Row, C) <> "-" Then
-                PlantID = Cells(MARC_Plant_Row, C)
+        'Sheets(GuidelineSheet).Select
+        Do While wksGuideLine.Cells(MARC_Plant_Row, C).Value2 <> ""
+            'Sheets(GuidelineSheet).Select
+            If wksGuideLine.Cells(MARC_Plant_Row, C).Value2 <> "-" Then
+                PlantID = wksGuideLine.Cells(MARC_Plant_Row, C).Value2
                 
                 'Stor.Loc loop
                 FindTargetColumn "M-StorLoc", PlantID, ColNr, Error
                 
                 s = 2
-                Do While Cells(s, ColNr) <> ""
-                    Sheets("M-StorLoc").Select
-                    StorLoc = Cells(s, ColNr)
-                    Sheets(GuidelineSheet).Select
-                    Cells(MARC_StorLoc_Row, C) = StorLoc
+                Do While Sheets("M-StorLoc").Cells(s, ColNr).Value2 <> ""
+                    'Sheets("M-StorLoc").Select
+                    StorLoc = Sheets("M-StorLoc").Cells(s, ColNr).Value2
+                    'Sheets(GuidelineSheet).Select
+                    With wksGuideLine
+                        .Cells(MARC_StorLoc_Row, C) = StorLoc
+                        Range(Cells(MARC_First_Row, C), Cells(MARC_Last_Row, C)).Copy
+                    End With
                     
-                    Range(Cells(MARC_First_Row, C), Cells(MARC_Last_Row, C)).Copy
-                    Sheets("MARC").Select
-                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                    :=False, Transpose:=True
+                    'Sheets("MARC").Select
+                    With Sheets("MARC")
+                        TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                        .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                        :=False, Transpose:=True
+                    End With
                 
                     s = s + 1
-                    Sheets("M-StorLoc").Select
+                    'Sheets("M-StorLoc").Select
                 Loop
                 
                 'New since 8500 implementation
                 If s = 2 Then
-                    Sheets(GuidelineSheet).Select
-                    Range(Cells(MARC_First_Row, C), Cells(MARC_Last_Row, C)).Copy
-                    Sheets("MARC").Select
-                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                    :=False, Transpose:=True
+                    'Sheets(GuidelineSheet).Select
+                    With wksGuideLine
+                        .Range(.Cells(MARC_First_Row, C), .Cells(MARC_Last_Row, C)).Copy
+                    End With
+                    'Sheets("MARC").Select
+                    With Sheets("MARC")
+                        TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                        .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                        :=False, Transpose:=True
+                    End With
                 End If
                 
                 'Stor.Loc reset
-                Sheets("M-StorLoc").Select
-                StorLoc = Cells(2, ColNr)
-                Sheets(GuidelineSheet).Select
-                Cells(MARC_StorLoc_Row, C) = StorLoc
+                'Sheets("M-StorLoc").Select
+                StorLoc = Sheets("M-StorLoc").Cells(2, ColNr).Value2
+                'Sheets(GuidelineSheet).Select
+                wksGuideLine.Cells(MARC_StorLoc_Row, C) = StorLoc
             End If
-            Sheets(GuidelineSheet).Select
+            'Sheets(GuidelineSheet).Select
             C = C + 1
         Loop
       End If
@@ -488,28 +535,36 @@ Application.Calculation = xlManual
         Pc = Pc + Pp
         Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
         C = MBEW_Col
-        Sheets(GuidelineSheet).Select
-        Do While Cells(MBEW_H_Plant_Row, C) <> ""
-            Sheets(GuidelineSheet).Select
-            If Cells(MBEW_H_Plant_Row, C) <> "-" Then
+        'Sheets(GuidelineSheet).Select
+        Do While wksGuideLine.Cells(MBEW_H_Plant_Row, C).Value2 <> ""
+            'Sheets(GuidelineSheet).Select
+            If wksGuideLine.Cells(MBEW_H_Plant_Row, C).Value2 <> "-" Then
               'Header
-                Range(Cells(MBEW_H_First_Row, C), Cells(MBEW_H_Last_Row, C)).Copy
-                Sheets("MBEW").Select
-                TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-                Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                :=False, Transpose:=True
-              'Child: if not 'Z' this part must be skipped
-                Sheets(GuidelineSheet).Select
-                If Cells(MBEW_H_ValCat_Row, C) = "Z" Then
-                    Sheets(GuidelineSheet).Select
-                    Range(Cells(MBEW_C_First_Row, C), Cells(MBEW_C_Last_Row, C)).Copy
-                    Sheets("MBEW").Select
-                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                With wksGuideLine
+                    .Range(.Cells(MBEW_H_First_Row, C), .Cells(MBEW_H_Last_Row, C)).Copy
+                End With
+                'Sheets("MBEW").Select
+                With Sheets("MBEW")
+                    TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                    .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
                     :=False, Transpose:=True
+                End With
+              'Child: if not 'Z' this part must be skipped
+                'Sheets(GuidelineSheet).Select
+                If wksGuideLine.Cells(MBEW_H_ValCat_Row, C).Value2 = "Z" Then
+                    'Sheets(GuidelineSheet).Select
+                    With wksGuideLine
+                        .Range(.Cells(MBEW_C_First_Row, C), .Cells(MBEW_C_Last_Row, C)).Copy
+                    End With
+                    'Sheets("MBEW").Select
+                    With Sheets("MBEW")
+                        TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                        .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                        :=False, Transpose:=True
+                    End With
                 End If
             End If
-            Sheets(GuidelineSheet).Select
+            'Sheets(GuidelineSheet).Select
             C = C + 1
         Loop
       End If
@@ -521,53 +576,60 @@ Application.Calculation = xlManual
         Pc = Pc + Pp
         Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
         C = BATCH_Col
-        Sheets(GuidelineSheet).Select
+        'Sheets(GuidelineSheet).Select
         
         'Check if batch managed
-        If Cells(BATCH_Batch_Row, C) <> "-" Then
-        Do While Cells(BATCH_Plant_Row, C) <> ""
-            Sheets(GuidelineSheet).Select
-            If Cells(BATCH_Batch_Row, C) <> "-" Then
-                If Cells(BATCH_Plant_Row, C) <> "-" Then
-                PlantID = Cells(BATCH_Plant_Row, C)
+        If wksGuideLine.Cells(BATCH_Batch_Row, C).Value2 <> "-" Then
+        Do While wksGuideLine.Cells(BATCH_Plant_Row, C).Value2 <> ""
+            'Sheets(GuidelineSheet).Select
+            If wksGuideLine.Cells(BATCH_Batch_Row, C).Value2 <> "-" Then
+                If wksGuideLine.Cells(BATCH_Plant_Row, C).Value2 <> "-" Then
+                PlantID = wksGuideLine.Cells(BATCH_Plant_Row, C).Value2
                 
                 'Stor.Loc loop
                 FindTargetColumn "M-StorLoc", PlantID, ColNr, Error
                 s = 2
-                Do While Cells(s, ColNr) <> ""
-                    Sheets("M-StorLoc").Select
-                    StorLoc = Cells(s, ColNr)
-                    Sheets(GuidelineSheet).Select
-                    Cells(BATCH_StorLoc_Row, C) = StorLoc
-                
-                    Range(Cells(BATCH_First_Row, C), Cells(BATCH_Last_Row, C)).Copy
-                    Sheets("BATCH").Select
-                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                    :=False, Transpose:=True
+                Do While Sheets("M-StorLoc").Cells(s, ColNr).Value2 <> ""
+                    'Sheets("M-StorLoc").Select
+                    StorLoc = Sheets("M-StorLoc").Cells(s, ColNr).Value2
+                    'Sheets(GuidelineSheet).Select
+                    With wksGuideLine
+                        .Cells(BATCH_StorLoc_Row, C).Value2 = StorLoc
+                        .Range(.Cells(BATCH_First_Row, C), .Cells(BATCH_Last_Row, C)).Copy
+                    End With
                     
+                    'Sheets("BATCH").Select
+                    With Sheets("BATCH")
+                        TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                        .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                        :=False, Transpose:=True
+                    End With
                     s = s + 1
-                    Sheets("M-StorLoc").Select
+                    'Sheets("M-StorLoc").Select
                 Loop
                 
                 If s = 2 Then
-                    Sheets(GuidelineSheet).Select
-                    Range(Cells(BATCH_First_Row, C), Cells(BATCH_Last_Row, C)).Copy
-                    Sheets("BATCH").Select
-                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-                    Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                    :=False, Transpose:=True
+                    'Sheets(GuidelineSheet).Select
+                    With wksGuideLine
+                        .Range(.Cells(BATCH_First_Row, C), .Cells(BATCH_Last_Row, C)).Copy
+                    End With
+                    'Sheets("BATCH").Select
+                    With Sheets("BATCH")
+                        TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                        .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                        :=False, Transpose:=True
+                    End With
                 End If
                 
                 'Stor.Loc reset
-                Sheets("M-StorLoc").Select
-                StorLoc = Cells(2, ColNr)
-                Sheets(GuidelineSheet).Select
-                Cells(BATCH_StorLoc_Row, C) = StorLoc
+                'Sheets("M-StorLoc").Select
+                StorLoc = Sheets("M-StorLoc").Cells(2, ColNr).Value2
+                'Sheets(GuidelineSheet).Select
+                wksGuideLine.Cells(BATCH_StorLoc_Row, C) = StorLoc
                     
                 End If
             End If
-            Sheets(GuidelineSheet).Select
+            'Sheets(GuidelineSheet).Select
             C = C + 1
         Loop
         End If
@@ -578,41 +640,48 @@ Application.Calculation = xlManual
         Tablename = "CLASSIFICATION"
         Pc = Pc + Pp
         Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
-        Sheets(GuidelineSheet).Select
+        'Sheets(GuidelineSheet).Select
         
         For y = 0 To 1
-            If Cells(CLASSIFICATION_Batch_Row, 13) <> "-" Then
+            If wksGuideLine.Cells(CLASSIFICATION_Batch_Row, 13).Value2 <> "-" Then
                 CLASS_Last_Row = CLASSIFICATION_Batch_Last_Row
             Else
                 CLASS_Last_Row = CLASSIFICATION_Last_Row
             End If
             
             If y = 0 Then
-                Range(Cells(CLASSIFICATION_First_Row, CLASSIFICATION_First_Col), Cells(CLASS_Last_Row, CLASSIFICATION_Last_Col)).Copy
+                With wksGuideLine
+                    .Range(.Cells(CLASSIFICATION_First_Row, CLASSIFICATION_First_Col), .Cells(CLASS_Last_Row, CLASSIFICATION_Last_Col)).Copy
+                End With
             Else
                 'Regsiter A-POScode
                 
-                dMaterial = Cells(CLASSIFICATION_First_Row, CLASSIFICATION_First_Col + 7)
+                dMaterial = wksGuideLine.Cells(CLASSIFICATION_First_Row, CLASSIFICATION_First_Col + 7)
                 If dMaterial <> "-" Then
-                    Sheets("A-POS").Select
+                    'Sheets("A-POS").Select
+        
+                    With Sheets("A-POS")
+                        d = .Cells(1, 1).CurrentRegion.Rows.Count
+                        .Cells(d + 1, 1) = dMaterial
+                    End With
+                    'Sheets(GuidelineSheet).Select
+                    With wksGuideLine
+                        .Range(.Cells(CLASSIFICATION_First_Row, CLASSIFICATION_First_Col + 7), .Cells(CLASS_Last_Row, CLASSIFICATION_Last_Col + 7)).Copy
+                    End With
                     
-                    
-                    d = Cells(1, 1).CurrentRegion.Rows.Count
-                    Cells(d + 1, 1) = dMaterial
-                    
-                    Sheets(GuidelineSheet).Select
-                    Range(Cells(CLASSIFICATION_First_Row, CLASSIFICATION_First_Col + 7), Cells(CLASS_Last_Row, CLASSIFICATION_Last_Col + 7)).Copy
                 Else
                     GoTo Next_y
                 End If
                 
             End If
             
-            Sheets("CLASSIFICATION").Select
-            TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-            Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                :=False, Transpose:=False
-            Sheets(GuidelineSheet).Select
+            'Sheets("CLASSIFICATION").Select
+            With Sheets("CLASSIFICATION")
+                TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+            End With
+            'Sheets(GuidelineSheet).Select
 Next_y:
         Next y
       End If
@@ -620,54 +689,70 @@ Next_y:
     'GLOBAL
     If FrmTableSelection.CkbGlobal.Value = True Then
         Tablename = "GLOBAL"
-        Sheets(GuidelineSheet).Select
-        If Cells(GLOBAL_First_Row, GLOBAL_Col) <> "-" Then
-            Range(Cells(GLOBAL_First_Row, GLOBAL_Col), Cells(GLOBAL_Last_Row, GLOBAL_Col)).Copy
-            Sheets("Global").Select
-            TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-            Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                :=False, Transpose:=True
+        'Sheets(GuidelineSheet).Select
+        If wksGuideLine.Cells(GLOBAL_First_Row, GLOBAL_Col).Value2 <> "-" Then
+            With wksGuideLine
+                .Range(.Cells(GLOBAL_First_Row, GLOBAL_Col), .Cells(GLOBAL_Last_Row, GLOBAL_Col)).Copy
+            End With
+            
+            'Sheets("Global").Select
+            With Sheets("Global")
+                TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=True
+            End With
         End If
       End If
       
       
     'PIR
+    
+    tm.StartCounter
       If FrmTableSelection.CkbPIR.Value = True Then
        Tablename = "PIR"
        Pc = Pc + Pp
        Application.StatusBar = "Calcualating: " & Format(Pc, "00") & "% " & String(Pc / 10, ChrW(9609)) & Left("..........", 10 - (Pc / 10))
-       Sheets(GuidelineSheet).Select
+       'Sheets(GuidelineSheet).Select
        i = PIRPP_First_Row
-       Do While Cells(i, PIR_Required_Col) <> ""
+       Do While wksGuideLine.Cells(i, PIR_Required_Col).Value2 <> ""
        
-            If Cells(i, PIR_Required_Col) = "Yes" Then
-                SourceList = Cells(i, PIR_SourceList_Col)
-                Range(Cells(i, PIR_First_Col), Cells(i, PIR_Last_Col)).Copy
-                Sheets("PIR").Select
-                TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-                Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+            If wksGuideLine.Cells(i, PIR_Required_Col) = "Yes" Then
+                With wksGuideLine
+                SourceList = .Cells(i, PIR_SourceList_Col).Value2
+                .Range(.Cells(i, PIR_First_Col), .Cells(i, PIR_Last_Col)).Copy
+                End With
+                
+                With Sheets("PIR")
+                TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                .Cells(TargetRow, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
                     :=False, Transpose:=False
+                End With
+
                 'check for SourceList requirement
               If FrmTableSelection.CkbME05.Value = True Then
                 If SourceList = "X" Then
-                    Sheets(GuidelineSheet).Select
+                    'Sheets(GuidelineSheet).Select
+                    With wksGuideLine
+                    vMaterial = "'" & .Cells(i, PIR_Material_Col).Value2
+                    vPlant = .Cells(i, PIR_Plant_Col).Value2
+                    vVendor = .Cells(i, PIR_Vendor_Col).Value2
+                    End With
                     
-                    vMaterial = "'" & Cells(i, PIR_Material_Col)
-                    vPlant = Cells(i, PIR_Plant_Col)
-                    vVendor = Cells(i, PIR_Vendor_Col)
-                    Sheets("ME05").Select
-                    TargetRow = Cells(1, 1).CurrentRegion.Rows.Count + 1
-                    Cells(TargetRow, 1) = vMaterial
-                    Cells(TargetRow, 2) = vPlant
-                    Cells(TargetRow, 3) = vVendor
+                
+                    With Sheets("ME05")
+                    TargetRow = .Cells(1, 1).CurrentRegion.Rows.Count + 1
+                    .Cells(TargetRow, 1).Value2 = vMaterial
+                    .Cells(TargetRow, 2).Value2 = vPlant
+                    .Cells(TargetRow, 3).Value2 = vVendor
+                    End With
                 End If
               End If
             End If
             i = i + 1
-            Sheets(GuidelineSheet).Select
+            'sheets(GuidelineSheet).Select
        Loop
      End If
-     
+     Debug.Print "PIR : " & tm.TimeElapsed / 1000
     'Next product
         x = x + 1
         Sheets(ProductSheet).Select
@@ -760,3 +845,332 @@ MsgBox "Error(s) dedected in " & Tablename & " sheet." & Chr(10) & Chr(10) & "So
 GoTo Exit_Sub
 
 End Sub
+
+Sub FindTargetRow(SearchTerm As String, RowNr As Integer, Error As Boolean)
+Dim vGuidelineSheet As String
+
+If Error = True Then Exit Sub
+If FrmTableSelection.OptGuidelineCreate.Value = True Then
+    vGuidelineSheet = "R3 MD guideline"
+Else
+    If FrmTableSelection.OptGuidelineExtend.Value = True Then
+        vGuidelineSheet = "R3 MD guideline (Extend)"
+    Else
+        vGuidelineSheet = "R3 MD guideline (Modification)"
+    End If
+End If
+Sheets(vGuidelineSheet).Select
+Columns("D:D").Select
+
+    On Error GoTo ErrorMsg
+    RowNr = Sheets(vGuidelineSheet).Columns("D:D").Find(What:=SearchTerm, After:=ActiveCell, LookIn:=xlFormulas, _
+        LookAt:=xlWhole, SearchOrder:=xlByRows, SearchDirection:=xlNext, _
+        MatchCase:=True, SearchFormat:=False).Row
+    On Error GoTo 0
+    
+Exit Sub
+ErrorMsg:
+    
+    Error = True
+    MsgBox "Following Table header can not be found in " & vGuidelineSheet & "-Sheet: " & SearchTerm
+    
+End Sub
+
+Sub FindTargetColumn(SearchSheet As String, SearchTerm As String, ColNr As Integer, Error As Boolean)
+
+If Error = True Then Exit Sub
+Sheets(SearchSheet).Select
+Rows("1:1").Select
+
+    'On Error GoTo ErrorMsg
+    ColNr = Sheets(SearchSheet).Rows("1:1").Find(What:=SearchTerm, After:=ActiveCell, LookIn:=xlFormulas, _
+        LookAt:=xlWhole, SearchOrder:=xlByRows, SearchDirection:=xlNext, _
+        MatchCase:=True, SearchFormat:=False).Column
+    'On Error GoTo 0
+    
+Exit Sub
+ErrorMsg:
+    
+    Error = True
+    MsgBox "Following Table header can not be found in '" & SearchSheet & "'-Sheet: " & SearchTerm
+    
+End Sub
+
+Function ClearSheet(TargetSheet As String)
+'ErrorLog clear
+    Application.StatusBar = "Clear sheet: " & TargetSheet
+    
+    Sheets(TargetSheet).Visible = True
+    Sheets(TargetSheet).Select
+    On Error Resume Next
+    ActiveSheet.ShowAllData
+    On Error GoTo 0
+    Rows("2:2").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Delete Shift:=xlUp
+End Function
+
+Function MakeCSV(FileNameExt As String)
+Dim DelimitorCSV As String
+Dim DelimitorTXT As String
+Dim Endkol As Integer
+Dim vTargetDir As String
+Dim filelist
+Dim amc As String
+Dim i As Long
+
+
+
+'
+Application.ScreenUpdating = False
+Application.DisplayAlerts = False
+
+DelimitorCSV = ";"
+DelimitorTXT = Chr(9)
+vTargetDir = "D:\"
+
+filelist = Array("MARA", "MAKT", "MVKE", "MTAX", "MARC", "SATX", "MBEW", "BATCH", "PIR", "CLASSIFICATION")
+
+amc = ActiveWorkbook.Name
+Workbooks(amc).Activate
+    
+For i = 0 To UBound(filelist)
+    
+        Select Case filelist(i)
+            
+            Case "MARA"
+                If FrmTableSelection.CkbMARA.Value = False Then
+                    GoTo Next_Sheet
+                End If
+                
+            Case "MAKT"
+                If FrmTableSelection.CkbMAKT.Value = False Then
+                    GoTo Next_Sheet
+                End If
+                
+            Case "MVKE"
+                If FrmTableSelection.CkbMVKE.Value = False Then
+                    GoTo Next_Sheet
+                End If
+                
+            Case "MTAX"
+                If FrmTableSelection.CkbMTAX.Value = False Then
+                    GoTo Next_Sheet
+                End If
+                
+            Case "MARC"
+                If FrmTableSelection.CkbMARC.Value = False Then
+                    GoTo Next_Sheet
+                End If
+                
+            Case "MBEW"
+                If FrmTableSelection.CkbMBEW.Value = False Then
+                    GoTo Next_Sheet
+                End If
+                
+            Case "SATX"
+                If FrmTableSelection.CkbSATX.Value = False Then
+                    GoTo Next_Sheet
+                End If
+                
+            Case "BATCH"
+                If FrmTableSelection.CkbBATCH.Value = False Then
+                    GoTo Next_Sheet
+                End If
+                
+            Case "CLASSIFICATION"
+                If FrmTableSelection.CkbCLASSIF.Value = False Then
+                    GoTo Next_Sheet
+                End If
+                
+            Case "PIR"
+                If FrmTableSelection.CkbPIR.Value = False Then
+                    GoTo Next_Sheet
+                End If
+                
+        End Select
+
+        Application.StatusBar = filelist(i)
+        Dim Sheetnaam As String
+        If filelist(i) = "CLASSIFICATION" Or filelist(i) = "MBEW" Or filelist(i) = "MAKT" Then
+            Sheets(filelist(i)).Select
+            If Cells(2, 1) = "" Then
+                GoTo Next_Sheet
+            End If
+            Sheets(filelist(i)).Copy
+            Endkol = Cells(1, 1).CurrentRegion.Columns.Count
+            If filelist(i) <> "MAKT" Then
+                Rows("1:1").Delete Shift:=xlUp
+            End If
+ 
+ '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+            'If filelist(i) = "MBEW" Then
+            '    'replace , to |
+            '    Cells.Replace What:=",", Replacement:="|", LookAt:=xlPart, SearchOrder _
+            '    :=xlByRows, MatchCase:=False, SearchFormat:=False, ReplaceFormat:=False
+            'End If
+ '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+         
+         
+            ActiveWorkbook.SaveAs Filename:=vTargetDir & filelist(i) & ".txt", _
+            FileFormat:=xlUnicodeText, CreateBackup:=False
+ 
+ 
+ '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+            'ActiveWindow.Close
+            'Workbooks(amc).Activate
+            'Workbooks.Open Filename:=vTargetDir & filelist(i) & ".txt", Format:=5
+           '
+            'replace | to ,
+            'Cells.Replace What:="|", Replacement:=",", LookAt:=xlPart, SearchOrder _
+            ':=xlByRows, MatchCase:=False, SearchFormat:=False, ReplaceFormat:=False
+            
+            'ActiveWorkbook.Save 'As Filename:=vTargetDir & filelist(i) & ".txt", _
+            'FileFormat:=xlUnicodeText, CreateBackup:=False
+        
+        
+ '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        Else
+            Sheets(filelist(i)).Select
+            If Cells(2, 1) = "" Then
+                GoTo Next_Sheet
+            End If
+            
+            Sheets(filelist(i)).Copy
+            
+            'replace , to |
+            Cells.Replace What:=",", Replacement:="|", LookAt:=xlPart, SearchOrder _
+            :=xlByRows, MatchCase:=False, SearchFormat:=False, ReplaceFormat:=False
+
+            'Save, close and re-open file for replacings
+            ActiveWorkbook.SaveAs Filename:=vTargetDir & filelist(i) & FileNameExt & ".csv", _
+            FileFormat:=xlCSV, CreateBackup:=False
+            ActiveWindow.Close
+            Workbooks(amc).Activate
+            Workbooks.Open Filename:=vTargetDir & filelist(i) & FileNameExt & ".csv", Format:=5
+            
+            'replace , to ;
+            Cells.Replace What:=",", Replacement:=";", LookAt:=xlPart, SearchOrder _
+            :=xlByRows, MatchCase:=False, SearchFormat:=False, ReplaceFormat:=False
+            
+            'replace | to ,
+            Cells.Replace What:="|", Replacement:=",", LookAt:=xlPart, SearchOrder _
+            :=xlByRows, MatchCase:=False, SearchFormat:=False, ReplaceFormat:=False
+            
+            'Save as final file
+            If filelist(i) = "MARA" Then
+                ActiveWorkbook.SaveAs Filename:=vTargetDir & filelist(i) & FileNameExt & ".csv", _
+                FileFormat:=xlTextPrinter, CreateBackup:=False
+            Else
+                ActiveWorkbook.Save
+            End If
+        End If
+        
+'volgende:
+        ActiveWindow.Close
+        Workbooks(amc).Activate
+Next_Sheet:
+Next i
+
+If FrmTableSelection.CkbCLASSIF.Value = True Then
+    MsgBox "Open Classification.txt and replace """" with nothing", vbCritical
+End If
+
+Application.ScreenUpdating = True
+Application.DisplayAlerts = True
+
+End Function
+
+Function CSVformat(Delimitor As String, Endkol As Integer)
+
+Dim tempstring As String
+Dim TempFile As String
+Dim CurSheet As String
+Dim EndBlock As Long
+Dim i As Long
+Dim j As Long
+
+
+TempFile = ActiveWorkbook.Name
+Workbooks(TempFile).Activate
+
+CurSheet = ActiveSheet.Name
+
+  ' CSV format
+    Range("a2").Select
+    EndBlock = ActiveCell.CurrentRegion.Rows.Count
+    For i = 1 To EndBlock
+        tempstring = Format(Cells(i, 1))
+        For j = 2 To Endkol
+            tempstring = tempstring & Delimitor & Cells(i, j)
+        Next j
+        Cells(i, 1) = tempstring
+        Application.StatusBar = CurSheet & " format line : " & i & "/" & EndBlock
+    Next i
+    
+    Range(Cells(1, 2), Cells(EndBlock, Range("a2").CurrentRegion.Columns.Count + 10)).Select
+    Selection.Delete
+    
+    Sheets(CurSheet).Copy
+    
+    Columns("B:B").Select
+    Range(Selection, Selection.End(xlToRight)).Select
+    Selection.Delete Shift:=xlToLeft
+
+    Workbooks(TempFile).Activate
+    ActiveWindow.Close
+    
+Application.StatusBar = ""
+
+End Function
+
+Function MakeWizard()
+Dim CurSheet As String
+Dim Fnaam As String
+Dim s As Long
+Dim TableArray
+Dim i As Long
+Dim LastRow As Long
+Dim x As Long
+
+
+CurSheet = ActiveSheet.Name
+Sheets("Wizard").Select
+
+Fnaam = ActiveWorkbook.Name
+Cells(4, 6) = Fnaam
+    
+    'Clear Wizard
+    Cells.Select
+    Selection.EntireRow.Hidden = False
+    Range(Cells(5, 3), Cells(121, 3)).Select
+    Selection.FormulaR1C1 = "N"
+    s = 5
+    
+    'Make Wizard based on CSV
+    TableArray = Array("MARA", "MVKE", "MARC", "MAKT", "SATX", "MBEW", "BATCH", "CLASSIFICATION", "PIR", "ME05", "GTS", "Global", "A-POS")
+    For i = 0 To 12
+        Sheets(TableArray(i)).Select
+        LastRow = Cells(1, 1).CurrentRegion.Rows.Count
+        If LastRow > 1 Then
+            Sheets("Wizard").Select
+            Range(Cells(s, 3), Cells(s + 8, 3)).Select
+            Selection.FormulaR1C1 = "Y"
+            Cells(s + 3, 6).FormulaR1C1 = LastRow - 1
+        End If
+        s = s + 9
+    Next i
+            
+    'Hide table not uploaded
+    Sheets("Wizard").Select
+    For x = 5 To 121
+        If Cells(x, 3) = "N" Then
+            Rows(x & ":" & x).Select
+            Selection.EntireRow.Hidden = True
+        End If
+    Next x
+
+Cells(1, 1).Select
+Sheets("Wizard").Select
+
+End Function
