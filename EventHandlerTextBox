@@ -1,0 +1,23 @@
+Option Explicit
+
+Public WithEvents myTextBox As MSForms.TextBox
+
+Public Property Set propControl(ByRef Ctrr As MSForms.TextBox)
+    Set myTextBox = Ctrr
+End Property
+
+Public Sub myTextBox_Change()
+'/Allowing putting only integers
+If myTextBox.Tag = "INT" Then ' Remember to put tag as "INT"
+     With myTextBox
+        If Not IsNumeric(.Value) And .Value <> vbNullString Then
+            MsgBox "Sorry, only numbers allowed"
+            .Value = vbNullString
+            ElseIf InStr(1, CStr(.Value), ",") > 1 Or InStr(1, CStr(.Value), ".") > 1 Then
+             MsgBox "Sorry, only integers allowed"
+            .Value = vbNullString
+        End If
+    End With
+End If
+'//
+End Sub
