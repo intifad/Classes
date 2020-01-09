@@ -3,6 +3,10 @@ public static Boolean CheckKennitala(string kennitala)
             int sum = 0;
             int checksum = 0;
             int[] wages = { 3, 2, 7, 6, 5, 4, 3, 2 };
+            Boolean correctChecksum = false;
+            Boolean correctLastDigit = false;
+
+
 
             for (int i = 0; i < 8; i++)
             {
@@ -11,7 +15,10 @@ public static Boolean CheckKennitala(string kennitala)
 
             checksum = 11 - sum % 11;
 
-            if (checksum.ToString() == kennitala[8].ToString())
+            correctChecksum = checksum == int.Parse(kennitala[8].ToString());
+            correctLastDigit = (kennitala[9] == '0') ^ (kennitala[9] == '9');
+
+            if (correctChecksum & correctLastDigit)
             {
                 return true;
             }
