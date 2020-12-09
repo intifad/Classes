@@ -269,7 +269,7 @@ outputStream.Close();]]></code>
     <subsheetid>f98e554b-8822-4d1d-8c74-e2715c3782bc</subsheetid>
     <display x="0" y="-165" />
     <datatype>text</datatype>
-    <initialvalue xml:space="preserve">https://seifurinn-test.arionbanki.is/sites/groupprojects/Robotics_vinnulistar</initialvalue>
+    <initialvalue xml:space="preserve">https://seifurinn-test.company.is/sites/groupprojects/Robotics_vinnulistar</initialvalue>
     <private />
     <alwaysinit />
   </stage>
@@ -277,7 +277,7 @@ outputStream.Close();]]></code>
     <subsheetid>3ee32892-2ffc-4774-8a3f-9e5178433b24</subsheetid>
     <display x="-45" y="-195" />
     <datatype>text</datatype>
-    <initialvalue xml:space="preserve">https://seifurinn-test.arionbanki.is/sites/groupprojects/Robotics_vinnulistar</initialvalue>
+    <initialvalue xml:space="preserve">https://seifurinn-test.company.is/sites/groupprojects/Robotics_vinnulistar</initialvalue>
     <private />
     <alwaysinit />
   </stage>
@@ -362,7 +362,7 @@ client.UploadFile(endpointUri,filePath);
     <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
     <display x="-60" y="-240" />
     <datatype>text</datatype>
-    <initialvalue xml:space="preserve">https://seifurinn-test.arionbanki.is/sites/groupprojects/Robotics_vinnulistar</initialvalue>
+    <initialvalue xml:space="preserve">https://seifurinn-test.company.is/sites/groupprojects/Robotics_vinnulistar</initialvalue>
     <private />
     <alwaysinit />
   </stage>
