@@ -1,0 +1,421 @@
+﻿<process name="Sharepoint Actions" version="1.0" bpversion="6.9.0.26970" narrative="" byrefcollection="true" type="object" runmode="Exclusive" preferredid="7d524c40-20e2-4738-aa80-40fb1511374e">
+  <appdef>
+    <element name="Application Root">
+      <id>ef7b6623-ca26-4a50-bda1-6e58dc250330</id>
+      <type>Application</type>
+      <basetype>Application</basetype>
+      <datatype>unknown</datatype>
+      <diagnose>False</diagnose>
+    </element>
+  </appdef>
+  <view>
+    <camerax>0</camerax>
+    <cameray>-21</cameray>
+    <zoom version="2">1.25</zoom>
+  </view>
+  <preconditions />
+  <endpoint narrative="" />
+  <subsheet subsheetid="b0547bbb-6906-4a7a-a31a-04806c07c56a" type="CleanUp" published="True">
+    <name>Clean Up</name>
+    <view>
+      <camerax>0</camerax>
+      <cameray>0</cameray>
+      <zoom version="2">1.25</zoom>
+    </view>
+  </subsheet>
+  <subsheet subsheetid="f98e554b-8822-4d1d-8c74-e2715c3782bc" type="Normal" published="False">
+    <name>#Get Form Digest Value</name>
+    <view>
+      <camerax>0</camerax>
+      <cameray>-42</cameray>
+      <zoom version="2">1.25</zoom>
+    </view>
+  </subsheet>
+  <subsheet subsheetid="55a31caf-e91f-4fda-965e-01b52706ad56" type="Normal" published="True">
+    <name>Upload File</name>
+    <view>
+      <camerax>-189</camerax>
+      <cameray>-181</cameray>
+      <zoom version="2">1.25</zoom>
+    </view>
+  </subsheet>
+  <subsheet subsheetid="3ee32892-2ffc-4774-8a3f-9e5178433b24" type="Normal" published="True">
+    <name>Download File</name>
+    <view>
+      <camerax>-77</camerax>
+      <cameray>-21</cameray>
+      <zoom version="2">1.25</zoom>
+    </view>
+  </subsheet>
+  <stage stageid="c3cb1699-e008-4f09-997a-a73062180b91" name="Start" type="Start">
+    <loginhibit />
+    <display x="15" y="-105" />
+    <onsuccess>cda4ba0e-a3fe-4eac-9ae1-6ac39be6d56c</onsuccess>
+  </stage>
+  <stage stageid="cda4ba0e-a3fe-4eac-9ae1-6ac39be6d56c" name="End" type="End">
+    <loginhibit />
+    <display x="15" y="90" />
+  </stage>
+  <stage stageid="444d13b2-7eab-464f-b96f-c8e31d809a2f" name="Stage1" type="ProcessInfo">
+    <display x="-210" y="-135" w="150" h="90" />
+    <references>
+      <reference>System.dll</reference>
+      <reference>System.Data.dll</reference>
+      <reference>System.Xml.dll</reference>
+      <reference>System.Drawing.dll</reference>
+      <reference>System.Net.Http.dll</reference>
+      <reference>System.Web.Extensions.dll</reference>
+      <reference>Newtonsoft.Json.dll</reference>
+    </references>
+    <imports>
+      <import>System</import>
+      <import>System.Drawing</import>
+      <import>System.Data</import>
+      <import>System.Net</import>
+      <import>System.Collections.Generic</import>
+      <import>System.IO</import>
+      <import>Newtonsoft.Json</import>
+    </imports>
+    <language>csharp</language>
+    <globalcode><![CDATA[]]></globalcode>
+    <code><![CDATA[]]></code>
+  </stage>
+  <stage stageid="cb1b1620-57b5-4bdb-adfc-baeb717435b7" name="Clean Up" type="SubSheetInfo">
+    <subsheetid>b0547bbb-6906-4a7a-a31a-04806c07c56a</subsheetid>
+    <display x="-195" y="-105" w="150" h="90" />
+  </stage>
+  <stage stageid="247babe7-76a7-4831-8fc3-b59650b6d918" name="Start" type="Start">
+    <subsheetid>b0547bbb-6906-4a7a-a31a-04806c07c56a</subsheetid>
+    <loginhibit />
+    <display x="15" y="-105" />
+    <onsuccess>c7306fb7-a1a3-4e96-8780-b3728af9be26</onsuccess>
+  </stage>
+  <stage stageid="c7306fb7-a1a3-4e96-8780-b3728af9be26" name="End" type="End">
+    <subsheetid>b0547bbb-6906-4a7a-a31a-04806c07c56a</subsheetid>
+    <loginhibit />
+    <display x="15" y="90" />
+  </stage>
+  <stage stageid="2e91c146-b9fa-4ec7-a231-53a664463915" name="Note1" type="Note">
+    <subsheetid>b0547bbb-6906-4a7a-a31a-04806c07c56a</subsheetid>
+    <narrative>Clean Up Page
+
+This is an optional page where you might choose to perform some finalisation (or "cleanup") tasks as your business object is closed down.
+
+The cleanup action will be called automatically immediately after closing your business object at the end of a business process.
+
+You will not be able to call this action from a business process, nor will it be called at any other time than before the disposal of the business object.</narrative>
+    <display x="-180" y="60" w="180" h="230" />
+  </stage>
+  <stage stageid="ceb3ee5a-5fe8-4ac7-8d88-90cf6061c178" name="Note2" type="Note">
+    <narrative>Initialise Page
+
+This is an optional page where you might choose to perform some initialisation tasks after your business object is loaded.
+
+The initialise action will be called automatically immediately after loading your business object.
+
+You will not be able to call this action from a business process, nor will it be called at any other time than after the creation of the object.</narrative>
+    <display x="-180" y="60" w="180" h="230" />
+  </stage>
+  <stage stageid="189879d8-8e0e-4dc9-be77-32f67321a16d" name="#Get Form Digest Value" type="SubSheetInfo">
+    <subsheetid>f98e554b-8822-4d1d-8c74-e2715c3782bc</subsheetid>
+    <display x="-195" y="-105" w="150" h="90" />
+  </stage>
+  <stage stageid="ec2e58d4-60d1-4c79-8b7b-bff11c4e3428" name="Start" type="Start">
+    <subsheetid>f98e554b-8822-4d1d-8c74-e2715c3782bc</subsheetid>
+    <loginhibit />
+    <display x="120" y="-150" />
+    <inputs>
+      <input type="text" name="Site URI" stage="Site URI" />
+    </inputs>
+    <onsuccess>44e8b764-a0ca-45c8-b934-c5793f793768</onsuccess>
+  </stage>
+  <stage stageid="3f74918b-b749-41f6-8e94-396e70491050" name="End" type="End">
+    <subsheetid>f98e554b-8822-4d1d-8c74-e2715c3782bc</subsheetid>
+    <loginhibit />
+    <display x="120" y="-15" />
+    <outputs>
+      <output type="text" name="Form Digest Value" stage="Form Digest Value" />
+    </outputs>
+  </stage>
+  <stage stageid="5b4dcd1c-eb6a-45a8-9228-da5b5267a885" name="Form Digest Value" type="Data">
+    <subsheetid>f98e554b-8822-4d1d-8c74-e2715c3782bc</subsheetid>
+    <display x="0" y="-15" />
+    <datatype>text</datatype>
+    <initialvalue />
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="44e8b764-a0ca-45c8-b934-c5793f793768" name="getmyRes1" type="Code">
+    <subsheetid>f98e554b-8822-4d1d-8c74-e2715c3782bc</subsheetid>
+    <loginhibit />
+    <display x="120" y="-105" />
+    <inputs>
+      <input type="text" name="address" expr="[Site URI]" />
+    </inputs>
+    <outputs>
+      <output type="text" name="myRes" stage="myRes" />
+    </outputs>
+    <onsuccess>fc672ccc-0cb0-4cd7-8ef4-e328ceac03af</onsuccess>
+    <code><![CDATA[
+           
+            
+            string resourceUrl = address + "/_api/contextinfo";
+            HttpWebRequest wreq = HttpWebRequest.Create(resourceUrl) as HttpWebRequest;
+            wreq.UseDefaultCredentials = true;
+            wreq.Method = "POST";
+            wreq.Accept = "application/json;odata=verbose";
+            wreq.ContentLength = 0;
+            wreq.ContentType = "application/json";
+            string result;
+            WebResponse wresp = wreq.GetResponse();
+       
+            using (StreamReader sr = new StreamReader(wresp.GetResponseStream()))
+            {
+                myRes = sr.ReadToEnd();
+            }
+ 
+          
+           
+]]></code>
+  </stage>
+  <stage stageid="fc672ccc-0cb0-4cd7-8ef4-e328ceac03af" name="Extract FormDigestValue" type="Calculation">
+    <subsheetid>f98e554b-8822-4d1d-8c74-e2715c3782bc</subsheetid>
+    <loginhibit />
+    <display x="120" y="-60" />
+    <onsuccess>3f74918b-b749-41f6-8e94-396e70491050</onsuccess>
+    <calculation expression="Mid([myRes], InStr([myRes], &quot;FormDigestValue&quot;)+18, 157)" stage="Form Digest Value" />
+  </stage>
+  <stage stageid="ab74dc4f-d552-492e-a306-d6d639b175a4" name="myRes" type="Data">
+    <subsheetid>f98e554b-8822-4d1d-8c74-e2715c3782bc</subsheetid>
+    <display x="0" y="-90" />
+    <datatype>text</datatype>
+    <initialvalue />
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="8d2af109-7499-4cb1-aa36-a8f61994bc3e" name="Upload File" type="SubSheetInfo">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <display x="-30" y="-375" w="150" h="90" />
+  </stage>
+  <stage stageid="83de723e-bdc0-4c8b-9a48-a44028966f5d" name="End" type="End">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <loginhibit />
+    <display x="60" y="-75" />
+  </stage>
+  <stage stageid="766353a7-605d-4fb2-b92b-4b2d4e6fdaef" name="Action Variable" type="Block">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <loginhibit />
+    <display x="-105" y="-135" w="90" h="105" />
+    <font family="Segoe UI" size="10" style="Regular" color="7FB2E5" />
+  </stage>
+  <stage stageid="b112391e-2021-47dc-978b-35fc14f2472d" name="Form Digest Value" type="Data">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <display x="-60" y="-90" />
+    <datatype>text</datatype>
+    <initialvalue />
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="c5604f89-7f87-4b32-92b2-26cb421554a4" name="Download File" type="SubSheetInfo">
+    <subsheetid>3ee32892-2ffc-4774-8a3f-9e5178433b24</subsheetid>
+    <display x="-195" y="-105" w="150" h="90" />
+  </stage>
+  <stage stageid="51f571b9-2d3c-43c3-8564-a2eb5fc67084" name="Start" type="Start">
+    <subsheetid>3ee32892-2ffc-4774-8a3f-9e5178433b24</subsheetid>
+    <loginhibit />
+    <display x="75" y="-165" />
+    <inputs>
+      <input type="text" name="siteUri" stage="siteUri" />
+      <input type="text" name="folderRelativeReference" stage="folderRelativeReference" />
+      <input type="text" name="filePath" stage="filePath" />
+      <input type="text" name="fileName" stage="fileName" />
+    </inputs>
+    <onsuccess>80d40c57-79ee-4547-8424-a0e7809ec60c</onsuccess>
+  </stage>
+  <stage stageid="93e96d3d-240f-482d-b35b-4f838b96138b" name="End" type="End">
+    <subsheetid>3ee32892-2ffc-4774-8a3f-9e5178433b24</subsheetid>
+    <loginhibit />
+    <display x="75" y="-30" />
+  </stage>
+  <stage stageid="0db483aa-9cb7-48cf-b5fb-a53632eaf6d8" name="Input" type="Block">
+    <subsheetid>3ee32892-2ffc-4774-8a3f-9e5178433b24</subsheetid>
+    <loginhibit />
+    <display x="-90" y="-255" w="90" h="150" />
+    <font family="Segoe UI" size="10" style="Regular" color="7FB2E5" />
+  </stage>
+  <stage stageid="b33afbf8-f6c7-49f6-a3fc-ca9b60ce52d8" name="Code 1" type="Code">
+    <subsheetid>3ee32892-2ffc-4774-8a3f-9e5178433b24</subsheetid>
+    <loginhibit />
+    <display x="75" y="-75" />
+    <inputs>
+      <input type="text" name="filePath" expr="[filePath]" />
+      <input type="text" name="myUri" expr="[requestURI]" />
+    </inputs>
+    <onsuccess>93e96d3d-240f-482d-b35b-4f838b96138b</onsuccess>
+    <code><![CDATA[WebClient client = new WebClient();
+
+client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
+client.Credentials = CredentialCache.DefaultNetworkCredentials;
+Uri endpointUri = new Uri(myUri);
+
+byte[] data = client.DownloadData(endpointUri);
+
+FileStream outputStream = new FileStream(filePath, FileMode.OpenOrCreate | FileMode.Append, FileAccess.Write, FileShare.None);
+outputStream.Write(data, 0, data.Length);
+outputStream.Flush(true);
+outputStream.Close();]]></code>
+  </stage>
+  <stage stageid="9a79b1de-643c-4057-9656-2c09ecbdf34e" name="Site URI" type="Data">
+    <subsheetid>f98e554b-8822-4d1d-8c74-e2715c3782bc</subsheetid>
+    <display x="0" y="-165" />
+    <datatype>text</datatype>
+    <initialvalue xml:space="preserve">https://seifurinn-test.arionbanki.is/sites/groupprojects/Robotics_vinnulistar</initialvalue>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="3af1ce3f-522f-4e04-8886-bbf0df5de851" name="siteUri" type="Data">
+    <subsheetid>3ee32892-2ffc-4774-8a3f-9e5178433b24</subsheetid>
+    <display x="-45" y="-195" />
+    <datatype>text</datatype>
+    <initialvalue xml:space="preserve">https://seifurinn-test.arionbanki.is/sites/groupprojects/Robotics_vinnulistar</initialvalue>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="019e75bd-2c45-4c45-935e-9d095a15b233" name="folderRelativeReference" type="Data">
+    <subsheetid>3ee32892-2ffc-4774-8a3f-9e5178433b24</subsheetid>
+    <display x="-45" y="-165" />
+    <datatype>text</datatype>
+    <initialvalue xml:space="preserve">Shared%20Documents</initialvalue>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="b48b56a8-f95f-41fc-b5ad-1d50c4fbf477" name="filePath" type="Data">
+    <subsheetid>3ee32892-2ffc-4774-8a3f-9e5178433b24</subsheetid>
+    <display x="-45" y="-225" />
+    <datatype>text</datatype>
+    <initialvalue xml:space="preserve">C:\RPA\Rekk.xlsx</initialvalue>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="5d0be208-1bdd-49d1-b6e2-ac003447586e" name="fileName" type="Data">
+    <subsheetid>3ee32892-2ffc-4774-8a3f-9e5178433b24</subsheetid>
+    <display x="-45" y="-135" />
+    <datatype>text</datatype>
+    <initialvalue xml:space="preserve">Test.docx</initialvalue>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="80d40c57-79ee-4547-8424-a0e7809ec60c" name="Prepare URI" type="Calculation">
+    <subsheetid>3ee32892-2ffc-4774-8a3f-9e5178433b24</subsheetid>
+    <loginhibit />
+    <display x="75" y="-120" />
+    <onsuccess>b33afbf8-f6c7-49f6-a3fc-ca9b60ce52d8</onsuccess>
+    <calculation expression="[siteUri]&amp;&quot;/_api/web/GetFolderByServerRelativeUrl('&quot;&amp;[folderRelativeReference]&amp;&quot;')/Files('&quot;&amp;[fileName]&amp;&quot;')/$value&quot;&#xA;" stage="requestURI" />
+  </stage>
+  <stage stageid="8499e63c-2466-47a9-9236-d49ec9d60b7e" name="requestURI" type="Data">
+    <subsheetid>3ee32892-2ffc-4774-8a3f-9e5178433b24</subsheetid>
+    <display x="-45" y="-60" />
+    <datatype>text</datatype>
+    <initialvalue />
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="74da712c-cc2f-48d0-81f4-540604e2f64e" name="Code3" type="Code">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <loginhibit />
+    <display x="60" y="-120" />
+    <inputs>
+      <input type="text" name="filePath" expr="[filePath]" />
+      <input type="text" name="myUri" expr="[requestURI]" />
+      <input type="text" name="formDigest" expr="[Form Digest Value]" />
+    </inputs>
+    <onsuccess>83de723e-bdc0-4c8b-9a48-a44028966f5d</onsuccess>
+    <code><![CDATA[WebClient client = new WebClient();
+
+client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
+client.Headers.Add("X-RequestDigest",formDigest);
+client.Credentials = CredentialCache.DefaultNetworkCredentials;
+Uri endpointUri = new Uri(myUri);
+
+client.UploadFile(endpointUri,filePath);
+]]></code>
+  </stage>
+  <stage stageid="02084839-1daf-4cc2-8ac3-c848a7ffad52" name="Start" type="Start">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <loginhibit />
+    <display x="60" y="-255" />
+    <inputs>
+      <input type="text" name="siteUri" stage="siteUri" />
+      <input type="text" name="folderRelativeReference" stage="folderRelativeReference" />
+      <input type="text" name="filePath" stage="filePath" />
+      <input type="text" name="fileName" stage="fileName" />
+    </inputs>
+    <onsuccess>aad00685-8228-4b98-94cd-44a26f312be4</onsuccess>
+  </stage>
+  <stage stageid="563e559c-a067-4ef6-9d18-dcb9be8613e7" name="Input" type="Block">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <loginhibit />
+    <display x="-105" y="-300" w="90" h="150" />
+    <font family="Segoe UI" size="10" style="Regular" color="7FB2E5" />
+  </stage>
+  <stage stageid="9e6516f2-c490-4389-95f0-a3add946cde1" name="siteUri" type="Data">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <display x="-60" y="-240" />
+    <datatype>text</datatype>
+    <initialvalue xml:space="preserve">https://seifurinn-test.arionbanki.is/sites/groupprojects/Robotics_vinnulistar</initialvalue>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="191bf4e9-b892-463f-b5d9-a31f4669696a" name="folderRelativeReference" type="Data">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <display x="-60" y="-210" />
+    <datatype>text</datatype>
+    <initialvalue xml:space="preserve">Shared%20Documents</initialvalue>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="72478047-651c-45d3-8424-2b705102fc17" name="filePath" type="Data">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <display x="-60" y="-270" />
+    <datatype>text</datatype>
+    <initialvalue xml:space="preserve">C:\RPA\Rekk.xlsx</initialvalue>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="dbc21559-c37c-4234-8420-cbcc5046dde8" name="fileName" type="Data">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <display x="-60" y="-180" />
+    <datatype>text</datatype>
+    <initialvalue xml:space="preserve">Tes1t.xlsx</initialvalue>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="aad00685-8228-4b98-94cd-44a26f312be4" name="Prepare URI" type="Calculation">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <loginhibit />
+    <display x="60" y="-210" />
+    <onsuccess>f6160b17-e647-42da-ada7-1e473d69d487</onsuccess>
+    <calculation expression="[siteUri]&amp;&quot;/_api/web/GetFolderByServerRelativeUrl('&quot;&amp;[folderRelativeReference]&amp;&quot;')/Files/add(overwrite=true,url='&quot;&amp;[fileName]&amp;&quot;')&quot;&#xA;" stage="requestURI" />
+  </stage>
+  <stage stageid="016cc283-ec0f-48f6-a1fa-1c16a99f98d6" name="requestURI" type="Data">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <display x="-60" y="-60" />
+    <datatype>text</datatype>
+    <initialvalue />
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="f6160b17-e647-42da-ada7-1e473d69d487" name="#Get Form Digest Value" type="SubSheet">
+    <subsheetid>55a31caf-e91f-4fda-965e-01b52706ad56</subsheetid>
+    <loginhibit />
+    <display x="60" y="-165" />
+    <inputs>
+      <input type="text" name="Site URI" friendlyname="Site URI" expr="[siteUri]" />
+    </inputs>
+    <outputs>
+      <output type="text" name="Form Digest Value" friendlyname="Form Digest Value" stage="Form Digest Value" />
+    </outputs>
+    <onsuccess>74da712c-cc2f-48d0-81f4-540604e2f64e</onsuccess>
+    <processid>f98e554b-8822-4d1d-8c74-e2715c3782bc</processid>
+  </stage>
+</process>
