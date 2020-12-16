@@ -1,3 +1,10 @@
+/*
+inputs InputCol, colName
+outputs OutputCol
+
+*/
+
+
 DataTable dTable = InputCol;
 Hashtable hTable = new Hashtable();
    ArrayList duplicateList = new ArrayList();
