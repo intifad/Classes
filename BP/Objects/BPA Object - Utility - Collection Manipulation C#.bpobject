@@ -1,0 +1,398 @@
+﻿<process name="Utility - Collection Manipulation C#" version="1.0" bpversion="6.10.0.30674" narrative="" byrefcollection="true" type="object" runmode="Exclusive" preferredid="e4ab7a9c-11e5-4d96-b504-9ae8a9e6e1cb">
+  <appdef>
+    <element name="Application Root">
+      <id>f2b1608b-7bb5-43b9-9e51-0e686bce5d18</id>
+      <type>Application</type>
+      <basetype>Application</basetype>
+      <datatype>unknown</datatype>
+      <diagnose>False</diagnose>
+    </element>
+  </appdef>
+  <view>
+    <camerax>0</camerax>
+    <cameray>0</cameray>
+    <zoom version="2">1.25</zoom>
+  </view>
+  <preconditions />
+  <endpoint narrative="" />
+  <subsheet subsheetid="9fa9f88e-314d-49c9-a41d-b9a0ff26009d" type="CleanUp" published="True">
+    <name>Clean Up</name>
+    <view>
+      <camerax>0</camerax>
+      <cameray>0</cameray>
+      <zoom version="2">1.25</zoom>
+    </view>
+  </subsheet>
+  <subsheet subsheetid="2a62c242-a0b0-4c57-9d09-18a013a63a07" type="Normal" published="True">
+    <name>Get Uniqe Values From Column</name>
+    <view>
+      <camerax>-4</camerax>
+      <cameray>0</cameray>
+      <zoom version="2">1.25</zoom>
+    </view>
+  </subsheet>
+  <subsheet subsheetid="752b2081-a26b-4ec2-a6fa-cefa6d464d41" type="Normal" published="True">
+    <name>Add Index Column</name>
+    <view>
+      <camerax>0</camerax>
+      <cameray>0</cameray>
+      <zoom version="2">1.25</zoom>
+    </view>
+  </subsheet>
+  <subsheet subsheetid="52ba18f4-35a6-4724-b478-edd10279df04" type="Normal" published="True">
+    <name>Change Columns Type To String</name>
+    <view>
+      <camerax>0</camerax>
+      <cameray>0</cameray>
+      <zoom version="2">1.25</zoom>
+    </view>
+  </subsheet>
+  <subsheet subsheetid="cc8c2d34-d3ac-4f35-b004-e0f2694f7101" type="Normal" published="True">
+    <name>Get Unique Values Basing On One Column</name>
+    <view>
+      <camerax>-6</camerax>
+      <cameray>0</cameray>
+      <zoom version="2">1.25</zoom>
+    </view>
+  </subsheet>
+  <stage stageid="9c3adfc5-c2ae-4557-bb2f-77ea20529d73" name="Start" type="Start">
+    <loginhibit />
+    <display x="15" y="-105" />
+    <onsuccess>41b0e250-02cc-4a86-a5f4-05eac82c14c7</onsuccess>
+  </stage>
+  <stage stageid="41b0e250-02cc-4a86-a5f4-05eac82c14c7" name="End" type="End">
+    <loginhibit />
+    <display x="15" y="90" />
+  </stage>
+  <stage stageid="4e783d2a-10f4-44d6-a44e-d772036b70f4" name="Stage1" type="ProcessInfo">
+    <display x="-195" y="-105" w="150" h="90" />
+    <references>
+      <reference>System.dll</reference>
+      <reference>System.Data.dll</reference>
+      <reference>System.Xml.dll</reference>
+      <reference>System.Drawing.dll</reference>
+    </references>
+    <imports>
+      <import>System</import>
+      <import>System.Drawing</import>
+      <import>System.Data</import>
+      <import>System.Collections</import>
+    </imports>
+    <language>csharp</language>
+    <globalcode><![CDATA[]]></globalcode>
+    <code><![CDATA[]]></code>
+  </stage>
+  <stage stageid="32063e1f-2c14-4c85-9ae3-9ac97d059883" name="Clean Up" type="SubSheetInfo">
+    <subsheetid>9fa9f88e-314d-49c9-a41d-b9a0ff26009d</subsheetid>
+    <display x="-195" y="-105" w="150" h="90" />
+  </stage>
+  <stage stageid="2b2ae2fc-edb0-4d6a-8dc9-d1efcd326687" name="Start" type="Start">
+    <subsheetid>9fa9f88e-314d-49c9-a41d-b9a0ff26009d</subsheetid>
+    <loginhibit />
+    <display x="15" y="-105" />
+    <onsuccess>168aeedb-a0fa-4e2a-8b83-7374179d0221</onsuccess>
+  </stage>
+  <stage stageid="168aeedb-a0fa-4e2a-8b83-7374179d0221" name="End" type="End">
+    <subsheetid>9fa9f88e-314d-49c9-a41d-b9a0ff26009d</subsheetid>
+    <loginhibit />
+    <display x="15" y="90" />
+  </stage>
+  <stage stageid="4b4e816a-4c8e-4088-a80c-ea258af55f7c" name="Get Uniqe Values From Column" type="SubSheetInfo">
+    <subsheetid>2a62c242-a0b0-4c57-9d09-18a013a63a07</subsheetid>
+    <display x="-255" y="-105" w="150" h="90" />
+  </stage>
+  <stage stageid="e28f4f90-b5b6-448d-bb55-2638c3312bd6" name="Start" type="Start">
+    <subsheetid>2a62c242-a0b0-4c57-9d09-18a013a63a07</subsheetid>
+    <loginhibit />
+    <display x="15" y="-90" />
+    <inputs>
+      <input type="collection" name="Input Collection" stage="Input Collection" />
+      <input type="text" name="Column Name" stage="Column Name" />
+    </inputs>
+    <onsuccess>6d54a1ca-6cc6-49d1-b7bb-d544e8862b14</onsuccess>
+  </stage>
+  <stage stageid="782afdbe-026a-413e-9df1-36be1b73b0e6" name="End" type="End">
+    <subsheetid>2a62c242-a0b0-4c57-9d09-18a013a63a07</subsheetid>
+    <loginhibit />
+    <display x="15" y="45" />
+    <outputs>
+      <output type="collection" name="Unique Values" stage="Output Collection" />
+    </outputs>
+  </stage>
+  <stage stageid="0ac73275-d7e5-4b85-a1a1-7dd938dfa55d" name="" type="Note">
+    <subsheetid>9fa9f88e-314d-49c9-a41d-b9a0ff26009d</subsheetid>
+    <narrative>Clean Up Page
+
+This is an optional page where you might choose to perform some finalisation (or "cleanup") tasks as your business object is closed down.
+
+The cleanup action will be called automatically immediately after closing your business object at the end of a business process.
+
+You will not be able to call this action from a business process, nor will it be called at any other time than before the disposal of the business object.</narrative>
+    <display x="-180" y="60" w="180" h="230" />
+  </stage>
+  <stage stageid="0da1a2ea-4122-4914-b0b6-188e0726e426" name="" type="Note">
+    <narrative>Initialise Page
+
+This is an optional page where you might choose to perform some initialisation tasks after your business object is loaded.
+
+The initialise action will be called automatically immediately after loading your business object.
+
+You will not be able to call this action from a business process, nor will it be called at any other time than after the creation of the object.</narrative>
+    <display x="-180" y="60" w="180" h="230" />
+  </stage>
+  <stage stageid="366983dc-0f91-4345-a34d-6c88286fdd1e" name="Input Collection" type="Collection">
+    <subsheetid>2a62c242-a0b0-4c57-9d09-18a013a63a07</subsheetid>
+    <display x="-90" y="-120" w="90" h="30" />
+    <datatype>collection</datatype>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="401c5596-88ca-4d55-9c33-903c17370803" name="Output Collection" type="Collection">
+    <subsheetid>2a62c242-a0b0-4c57-9d09-18a013a63a07</subsheetid>
+    <display x="-90" y="45" w="90" h="30" />
+    <datatype>collection</datatype>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="6d54a1ca-6cc6-49d1-b7bb-d544e8862b14" name="Code1" type="Code">
+    <subsheetid>2a62c242-a0b0-4c57-9d09-18a013a63a07</subsheetid>
+    <loginhibit />
+    <display x="15" y="-30" w="90" h="30" />
+    <inputs>
+      <input type="collection" name="inputCollection" expr="[Input Collection]" />
+      <input type="text" name="columnName" expr="[Column Name]" />
+    </inputs>
+    <outputs>
+      <output type="collection" name="outputCollection" stage="Output Collection" />
+    </outputs>
+    <onsuccess>782afdbe-026a-413e-9df1-36be1b73b0e6</onsuccess>
+    <code><![CDATA[
+DataView view = new DataView(inputCollection);
+outputCollection = view.ToTable(true, columnName);]]></code>
+  </stage>
+  <stage stageid="c69a153f-822f-4e40-b292-7686259facaf" name="Column Name" type="Data">
+    <subsheetid>2a62c242-a0b0-4c57-9d09-18a013a63a07</subsheetid>
+    <display x="-90" y="-90" w="90" h="30" />
+    <datatype>text</datatype>
+    <initialvalue />
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="f97fe9ff-a9b1-4a00-afd8-efe92c6f33ec" name="Add Index Column" type="SubSheetInfo">
+    <subsheetid>752b2081-a26b-4ec2-a6fa-cefa6d464d41</subsheetid>
+    <display x="-195" y="-105" w="150" h="90" />
+  </stage>
+  <stage stageid="80408f09-610b-461f-9970-3e7ca9bd8ab5" name="Start" type="Start">
+    <subsheetid>752b2081-a26b-4ec2-a6fa-cefa6d464d41</subsheetid>
+    <loginhibit />
+    <display x="15" y="-105" />
+    <inputs>
+      <input type="collection" name="Inpu Collection" stage="Inpu Collection" />
+    </inputs>
+    <onsuccess>ce85375a-d836-4556-acde-13ded52a81c1</onsuccess>
+  </stage>
+  <stage stageid="858e701b-1b8c-41fb-8fe6-0df440bbcdc4" name="End" type="End">
+    <subsheetid>752b2081-a26b-4ec2-a6fa-cefa6d464d41</subsheetid>
+    <loginhibit />
+    <display x="15" y="90" />
+    <outputs>
+      <output type="collection" name="Output Collection" stage="Output Collection" />
+    </outputs>
+  </stage>
+  <stage stageid="6f55ded0-d865-4b5e-ad1e-c0934d641da0" name="Output Collection" type="Collection">
+    <subsheetid>752b2081-a26b-4ec2-a6fa-cefa6d464d41</subsheetid>
+    <display x="-60" y="90" />
+    <datatype>collection</datatype>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="ce85375a-d836-4556-acde-13ded52a81c1" name="Code2" type="Code">
+    <subsheetid>752b2081-a26b-4ec2-a6fa-cefa6d464d41</subsheetid>
+    <loginhibit />
+    <display x="15" y="-15" />
+    <inputs>
+      <input type="collection" name="inputCol" expr="[Inpu Collection]" />
+    </inputs>
+    <outputs>
+      <output type="collection" name="outputCol" stage="Output Collection" />
+    </outputs>
+    <onsuccess>858e701b-1b8c-41fb-8fe6-0df440bbcdc4</onsuccess>
+    <code><![CDATA[Decimal i=1;
+inputCol.Columns.Add("Index", typeof(Decimal)); 
+            
+
+foreach (DataRow dataRow in inputCol.Rows)
+{
+      dataRow["Index"] = i;
+	  i++;
+}
+outputCol = inputCol;]]></code>
+  </stage>
+  <stage stageid="acd44fdf-f6c3-41fb-ba65-d6948587fdc2" name="Inpu Collection" type="Collection">
+    <subsheetid>752b2081-a26b-4ec2-a6fa-cefa6d464d41</subsheetid>
+    <display x="-60" y="-105" />
+    <datatype>collection</datatype>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="41bf14af-9cab-4014-b36d-a3e5cea0cd46" name="Change Columns Type To String" type="SubSheetInfo">
+    <subsheetid>52ba18f4-35a6-4724-b478-edd10279df04</subsheetid>
+    <display x="-195" y="-105" w="150" h="90" />
+  </stage>
+  <stage stageid="8472a1ab-3aaf-4341-82dd-e62b81f9c6db" name="Start" type="Start">
+    <subsheetid>52ba18f4-35a6-4724-b478-edd10279df04</subsheetid>
+    <loginhibit />
+    <display x="15" y="-105" />
+    <inputs>
+      <input type="collection" name="Inpu Collection" stage="Inpu Collection" />
+    </inputs>
+    <onsuccess>2a3d84ce-4ddb-473c-97e9-87f55fe3e041</onsuccess>
+  </stage>
+  <stage stageid="edea093f-1c88-47e3-8d13-28858cdf6829" name="End" type="End">
+    <subsheetid>52ba18f4-35a6-4724-b478-edd10279df04</subsheetid>
+    <loginhibit />
+    <display x="15" y="90" />
+    <outputs>
+      <output type="collection" name="Output Collection" stage="Output Collection" />
+    </outputs>
+  </stage>
+  <stage stageid="ababe7f5-a857-467c-8db5-89d530fd6d37" name="Output Collection" type="Collection">
+    <subsheetid>52ba18f4-35a6-4724-b478-edd10279df04</subsheetid>
+    <display x="-60" y="90" />
+    <datatype>collection</datatype>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="2a3d84ce-4ddb-473c-97e9-87f55fe3e041" name="Code3" type="Code">
+    <subsheetid>52ba18f4-35a6-4724-b478-edd10279df04</subsheetid>
+    <loginhibit />
+    <display x="15" y="-15" />
+    <inputs>
+      <input type="collection" name="inputCol" expr="[Inpu Collection]" />
+    </inputs>
+    <outputs>
+      <output type="collection" name="outputCol" stage="Output Collection" />
+    </outputs>
+    <onsuccess>edea093f-1c88-47e3-8d13-28858cdf6829</onsuccess>
+    <code><![CDATA[DataTable tempDt = new DataTable();
+
+foreach (DataColumn dcOld in inputCol.Columns){
+
+	DataColumn dcNew = new DataColumn(dcOld.ColumnName.Trim(), typeof(string)); 
+	tempDt.Columns.Add(dcNew);
+	     
+}
+
+foreach (DataRow dtRow in inputCol.Rows){
+		DataRow newRow = tempDt.NewRow();
+		tempDt.Rows.Add(newRow);
+	}
+
+for (int i = 0; i < tempDt.Rows.Count ; i++)
+{
+    for (int j = 0; j < tempDt.Columns.Count ; j++)
+    {
+        
+        tempDt.Rows[i][j] = inputCol.Rows[i][j];
+    }
+}
+outputCol = tempDt;]]></code>
+  </stage>
+  <stage stageid="0108cc65-0c4d-4caf-a45a-ffa1282f868f" name="Inpu Collection" type="Collection">
+    <subsheetid>52ba18f4-35a6-4724-b478-edd10279df04</subsheetid>
+    <display x="-60" y="-105" />
+    <datatype>collection</datatype>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="2589df1d-2a76-4374-b516-b3e56fa1f6e1" name="Get Unique Values Basing On One Column" type="SubSheetInfo">
+    <subsheetid>cc8c2d34-d3ac-4f35-b004-e0f2694f7101</subsheetid>
+    <display x="-255" y="-120" w="150" h="90" />
+  </stage>
+  <stage stageid="918b7136-9b7c-4158-9b2b-7ceb09ba3b8a" name="Start" type="Start">
+    <subsheetid>cc8c2d34-d3ac-4f35-b004-e0f2694f7101</subsheetid>
+    <loginhibit />
+    <display x="15" y="-105" />
+    <inputs>
+      <input type="collection" name="Inpu Collection" stage="Inpu Collection" />
+      <input type="text" name="Column Name" stage="Column Name" />
+    </inputs>
+    <onsuccess>e53128b8-6d69-4483-8d9b-35bece745fe2</onsuccess>
+  </stage>
+  <stage stageid="c61e63f6-f150-4a87-9d45-2ba42672fc23" name="End" type="End">
+    <subsheetid>cc8c2d34-d3ac-4f35-b004-e0f2694f7101</subsheetid>
+    <loginhibit />
+    <display x="15" y="90" />
+    <outputs>
+      <output type="collection" name="Output Collection" stage="Output Collection" />
+    </outputs>
+  </stage>
+  <stage stageid="da272aba-983f-4690-a62b-d9ed2c52d82a" name="Output Collection" type="Collection">
+    <subsheetid>cc8c2d34-d3ac-4f35-b004-e0f2694f7101</subsheetid>
+    <display x="-75" y="75" />
+    <datatype>collection</datatype>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="e53128b8-6d69-4483-8d9b-35bece745fe2" name="Code4" type="Code">
+    <subsheetid>cc8c2d34-d3ac-4f35-b004-e0f2694f7101</subsheetid>
+    <loginhibit />
+    <display x="15" y="-15" />
+    <inputs>
+      <input type="collection" name="InputCol" expr="[Inpu Collection]" />
+      <input type="text" name="colName" expr="[Column Name]" />
+    </inputs>
+    <outputs>
+      <output type="collection" name="OutputCol" stage="Output Collection" />
+    </outputs>
+    <onsuccess>c61e63f6-f150-4a87-9d45-2ba42672fc23</onsuccess>
+    <code><![CDATA[
+DataTable dTable = InputCol;
+Hashtable hTable = new Hashtable();
+   ArrayList duplicateList = new ArrayList();
+
+   //Add list of all the unique item value to hashtable, which stores combination of key, value pair.
+   //And add duplicate item value in arraylist.
+   foreach (DataRow drow in dTable.Rows)
+   {
+      if (hTable.Contains(drow[colName]))
+         duplicateList.Add(drow);
+      else
+         hTable.Add(drow[colName], string.Empty); 
+   }
+
+   //Removing a list of duplicate items from datatable.
+   foreach (DataRow dRow in duplicateList)
+      dTable.Rows.Remove(dRow);
+
+   //Datatable which contains unique records will be return as output.
+      OutputCol = dTable;]]></code>
+  </stage>
+  <stage stageid="d8e478a8-4cff-44ad-8798-d88e4766e1dc" name="Inpu Collection" type="Collection">
+    <subsheetid>cc8c2d34-d3ac-4f35-b004-e0f2694f7101</subsheetid>
+    <display x="-75" y="-120" />
+    <datatype>collection</datatype>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="0f0fdb2a-8ae3-4c90-9d0e-850e6cf3efd9" name="Column Name" type="Data">
+    <subsheetid>cc8c2d34-d3ac-4f35-b004-e0f2694f7101</subsheetid>
+    <display x="-75" y="-90" />
+    <datatype>text</datatype>
+    <initialvalue />
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="67c58a84-32f8-425a-8f9e-6401752ff50f" name="Input" type="Block">
+    <subsheetid>cc8c2d34-d3ac-4f35-b004-e0f2694f7101</subsheetid>
+    <loginhibit />
+    <display x="-135" y="-150" w="105" h="90" />
+    <font family="Segoe UI" size="10" style="Regular" color="FFFF00" />
+  </stage>
+  <stage stageid="63e934f9-f1aa-4c14-a1d4-8658d9ee547e" name="Output" type="Block">
+    <subsheetid>cc8c2d34-d3ac-4f35-b004-e0f2694f7101</subsheetid>
+    <loginhibit />
+    <display x="-120" y="45" w="90" h="60" />
+    <font family="Segoe UI" size="10" style="Regular" color="FF0000" />
+  </stage>
+</process>
